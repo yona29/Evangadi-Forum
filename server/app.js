@@ -6,9 +6,9 @@ const app = express();
 
 const connection = mysql2.createConnection({
   host: "localhost",
-  user: "root",
-  password: "",
-  database: "stack_qa",
+  user: "evangadi-admin",
+  password: "123456",
+  database: "evangadi_forum",
 });
 
 connection.connect((err) => {
