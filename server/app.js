@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 async function start() {
   try {
     const result = await dbConnection.getConnection();
-    console.log("database connection established");
+    console.log("database connection was established !!");
   } catch (error) {
     console.log(error.message);
   }
