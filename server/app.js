@@ -1,28 +1,15 @@
-import express from "express";
-import mysql2 from "mysql2";
-
+const express = require("express");
 const app = express();
+const port = 5500;
+
+const dbConnection = require("./db/dbConfig.js")
 
 
-const connection = mysql2.createConnection({
-  host: "localhost",
-  user: "evangadi-admin",
-  password: "123456",
-  database: "evangadi_forum",
-});
-
-connection.connect((err) => {
-  if (err) {
-    console.error("MySQL connection failed:", err);
-  } else {
-    console.log("✅ Connected to MySQL");
-  }
-});
 
 app.get("/", (req, res) => {
   res.send("Hello from Evangadi Forum!");
 });
 
-app.listen(3000, () =>
-  console.log("🚀 Server running on http://localhost:3000")
+app.listen(port, () =>
+  console.log(`🚀 Server running on http://localhost:${port}`)
 );
