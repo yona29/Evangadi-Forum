@@ -10,14 +10,15 @@ const installRoutes = require("./routes/installRoute");
 const authMiddleware = require("./middleware/authMiddleware");
 const dbConnection = require("./db/dbConfig");
 
-const express = require("express");
 const app = express();
-const port = process.env.PORT;
+const port = 5500;
 app.use(cors()); 
 app.use(express.json()); 
 
 // Test route
-app.get("/", (req, res) => res.send("welcome"));
+app.get("/", (req, res) => {
+  res.send("Hello from Evangadi Forum!");
+});
 
 // Routes
 app.use("/", installRoutes); 
@@ -39,3 +40,8 @@ app.use("/api", authMiddleware, answerRoutes);
 app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
 });
+
+
+
+
+
