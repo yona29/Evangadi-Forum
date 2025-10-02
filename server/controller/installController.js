@@ -3,7 +3,6 @@ const dbConnection = require("../db/dbConfig");
 
 // Function to create database tables if they don't exist
 async function install(req, res) {
-  // 1️⃣ Create Users table
   let createUser = `CREATE TABLE IF NOT EXISTS users (
     userid INT(20) NOT NULL AUTO_INCREMENT,
     username VARCHAR(20) NOT NULL UNIQUE,   
@@ -14,7 +13,6 @@ async function install(req, res) {
     PRIMARY KEY(userid)
   )`;
 
-  // 2️⃣ Create Questions table
   let createQuestions = `CREATE TABLE IF NOT EXISTS questions (
     id INT(20) NOT NULL AUTO_INCREMENT,
     questionid VARCHAR(100) NOT NULL UNIQUE,  
@@ -27,7 +25,6 @@ async function install(req, res) {
     FOREIGN KEY (userid) REFERENCES users(userid) ON DELETE CASCADE
   )`;
 
-  // 3️⃣ Create Answers table
   let createAnswers = `CREATE TABLE IF NOT EXISTS answers (
     answerid INT(20) NOT NULL AUTO_INCREMENT,
     userid INT(20) NOT NULL,                 
@@ -40,17 +37,14 @@ async function install(req, res) {
   )`;
 
   try {
-    // 4️⃣ Execute the table creation queries
     await dbConnection.query(createUser);
     await dbConnection.query(createQuestions);
     await dbConnection.query(createAnswers);
 
-    // 5️⃣ Respond success
     return res.status(201).json({ msg: "Tables created successfully" });
   } catch (error) {
     console.error("Error creating tables:", error.message);
 
-    // 6️⃣ Respond error if something went wrong
     return res
       .status(500)
       .json({ msg: "Something went wrong, try again later" });
