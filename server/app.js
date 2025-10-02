@@ -1,46 +1,29 @@
+import express from "express";
+import mysql2 from "mysql2";
 
 const express = require("express");
 const app = express();
-const port = 5500;
-
-const dbConnection = require("./db/dbConfig.js")
-
-// Import dependencies
-const express = require("express");
-const cors = require("cors");
-
-// Import custom routes and middleware
-const answerRoutes = require("./routes/answerRoute");
-const questionRoutes = require("./routes/questionRoute");
-const userRoutes = require("./routes/userRoute");
-const installRoutes = require("./routes/installRoute");
-const authMiddleware = require("./middleware/authMiddleware");
-const dbConnection = require("./db/dbConfig");
 
 
-app.use(cors()); 
-app.use(express.json()); 
+const connection = mysql2.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "stack_qa",
+});
 
-// Test route
-app.get("/", (req, res) => res.send("welcome"));
-
-// Routes
-app.use("/", installRoutes); 
-app.use("/api/user", userRoutes); 
-app.use("/api", authMiddleware, questionRoutes); 
-app.use("/api", authMiddleware, answerRoutes); 
-
-// Test DB connection
-(async function start() {
-  try {
-    await dbConnection.getConnection();
-    console.log("✅ Database connection established");
-  } catch (err) {
-    console.error("❌ Database connection failed:", err.message);
+connection.connect((err) => {
+  if (err) {
+    console.error("MySQL connection failed:", err);
+  } else {
+    console.log("✅ Connected to MySQL");
   }
-})();
+});
 
-app.listen(port, () =>
-  console.log(`🚀 Server running on http://localhost:${port}`)
+app.get("/", (req, res) => {
+  res.send("Hello from Evangadi Forum!");
+});
+
+app.listen(3000, () =>
+  console.log("🚀 Server running on http://localhost:3000")
 );
-
