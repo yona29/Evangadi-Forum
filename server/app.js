@@ -5,8 +5,8 @@ const cors = require("cors");
 // Import custom routes and middleware
 const answerRoutes = require("./routes/answerRoute");
 const questionRoutes = require("./routes/questionRoute");
-const userRoutes = require("./routes/userRoute");
-const installRoutes = require("./routes/installRoute");
+// const userRoutes = require("./routes/userRoute");
+// const installRoutes = require("./routes/installRoute");
 const authMiddleware = require("./middleware/authMiddleware");
 const dbConnection = require("./db/dbConfig");
 
@@ -20,10 +20,11 @@ app.get("/", (req, res) => {
   res.send("Hello from Evangadi Forum!");
 });
 
-// Beth - start
-app.use("/api/question", questionRoutes);
-// Beth - end
+app.use("/api/answer", authMiddleware, answerRoutes)
 
+// Beth - start
+app.use("/api/question", authMiddleware, questionRoutes);
+// Beth - end
 
 // try conncet to database and if so app listen
 async function start() {
@@ -33,7 +34,7 @@ async function start() {
   } catch (err) {
     console.error("❌ Database connection failed:", err.message);
   }
-})();
+};
 
 // Start server
 app.listen(port, () => {
