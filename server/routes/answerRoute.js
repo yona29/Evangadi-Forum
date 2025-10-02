@@ -1,5 +1,4 @@
-<<<<<<< Updated upstream
-=======
+
 const express = require("express");
 const router = express.Router();
 
@@ -14,10 +13,4 @@ router.post("/answer/:questionid", authMiddleware, postAnswer);
 router.get("/answer/:questionid", authMiddleware, getAnswer);
 
 module.exports = router;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+

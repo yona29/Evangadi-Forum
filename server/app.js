@@ -1,16 +1,10 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 const express = require("express");
 const app = express();
 const port = 5500;
 
 const dbConnection = require("./db/dbConfig.js")
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 // Import dependencies
 const express = require("express");
 const cors = require("cors");
@@ -23,8 +17,7 @@ const installRoutes = require("./routes/installRoute");
 const authMiddleware = require("./middleware/authMiddleware");
 const dbConnection = require("./db/dbConfig");
 
-const app = express();
-const port = process.env.PORT;
+
 app.use(cors()); 
 app.use(express.json()); 
 
@@ -46,39 +39,8 @@ app.use("/api", authMiddleware, answerRoutes);
     console.error("❌ Database connection failed:", err.message);
   }
 })();
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-
-// Start server
-app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`);
-});
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-// try conncet to database and if so app listen
-async function start() {
-  try {
-    const result = await dbConnection.getConnection();
-    console.log("database connection was established !!");
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-start();
 
 app.listen(port, () =>
   console.log(`🚀 Server running on http://localhost:${port}`)
 );
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
