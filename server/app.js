@@ -1,11 +1,14 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 const express = require("express");
 const app = express();
 const port = 5500;
 
 const dbConnection = require("./db/dbConfig.js")
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 // Import dependencies
@@ -44,6 +47,9 @@ app.use("/api", authMiddleware, answerRoutes);
   }
 })();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -52,6 +58,7 @@ app.use("/api", authMiddleware, answerRoutes);
 app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
 });
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
@@ -69,6 +76,8 @@ start();
 app.listen(port, () =>
   console.log(`🚀 Server running on http://localhost:${port}`)
 );
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======

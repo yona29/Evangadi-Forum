@@ -15,6 +15,9 @@ router.get("/answer/:questionid", authMiddleware, getAnswer);
 
 module.exports = router;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
