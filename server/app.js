@@ -8,6 +8,11 @@ app.get("/", (req, res) => {
   res.send("Hello from Evangadi Forum!");
 });
 
+// Beth - start
+app.use("/api/question", questionRoutes);
+// Beth - end
+
+
 // try conncet to database and if so app listen
 async function start() {
   try {
