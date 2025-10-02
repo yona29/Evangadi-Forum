@@ -1,24 +1,28 @@
-const express = require("express");
-const app = express();
-const port = 5500;
+import express from "express";
+import mysql2 from "mysql2";
 
-const dbConnection = require("./db/dbConfig.js")
+const app = express();
+
+
+const connection = mysql2.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "stack_qa",
+});
+
+connection.connect((err) => {
+  if (err) {
+    console.error("MySQL connection failed:", err);
+  } else {
+    console.log("✅ Connected to MySQL");
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Hello from Evangadi Forum!");
 });
 
-// try conncet to database and if so app listen
-async function start() {
-  try {
-    const result = await dbConnection.getConnection();
-    console.log("database connection was established !!");
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-start();
-
-app.listen(port, () =>
-  console.log(`🚀 Server running on http://localhost:${port}`)
+app.listen(3000, () =>
+  console.log("🚀 Server running on http://localhost:3000")
 );
