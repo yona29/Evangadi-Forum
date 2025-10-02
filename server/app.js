@@ -11,7 +11,7 @@ const authMiddleware = require("./middleware/authMiddleware");
 const dbConnection = require("./db/dbConfig");
 
 const app = express();
-const port = 5500;
+const port = process.env.PORT;
 app.use(cors()); 
 app.use(express.json()); 
 
