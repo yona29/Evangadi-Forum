@@ -13,3 +13,10 @@ router.get("/", getAllQuestions);
 router.get("/:question_id", getSingleQuestion);
 
 module.exports = router;
+// Import controller functions
+const { question } = require("../controller/questionController");
+
+// Import authentication middleware
+const authMiddleware = require("../middleware/authMiddleware");
+
+router.post("/question", authMiddleware, question);
