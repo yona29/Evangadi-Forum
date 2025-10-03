@@ -1,24 +1,47 @@
+// Import dependencies
 const express = require("express");
+const cors = require("cors");
+
+// Import custom routes and middleware
+const answerRoutes = require("./routes/answerRoute");
+const questionRoutes = require("./routes/questionRoute");
+const userRoutes = require("./routes/userRoute");
+const installRoutes = require("./routes/installRoute");
+const authMiddleware = require("./middleware/authMiddleware");
+const dbConnection = require("./db/dbConfig");
+
 const app = express();
-const port = 5500;
+const port = process.env.PORT;
+app.use(cors()); 
+app.use(express.json()); 
 
-const dbConnection = require("./db/dbConfig.js")
-
+// Test route
 app.get("/", (req, res) => {
   res.send("Hello from Evangadi Forum!");
 });
 
-// try conncet to database and if so app listen
-async function start() {
-  try {
-    const result = await dbConnection.getConnection();
-    console.log("database connection was established !!");
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-start();
+// Routes
+app.use("/", installRoutes); 
+app.use("/api/user", userRoutes); 
+app.use("/api", authMiddleware, questionRoutes); 
+app.use("/api", authMiddleware, answerRoutes); 
 
-app.listen(port, () =>
-  console.log(`🚀 Server running on http://localhost:${port}`)
-);
+// Test DB connection
+(async function start() {
+  try {
+    await dbConnection.getConnection();
+    console.log("✅ Database connection established");
+  } catch (err) {
+    console.error("❌ Database connection failed:", err.message);
+  }
+})();
+
+// Start server
+app.listen(port, () => {
+  console.log(`🚀 Server running on http://localhost:${port}`);
+});
+
+
+
+
+
