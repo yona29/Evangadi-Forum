@@ -1,24 +1,21 @@
 const mysql2 = require("mysql2");
-
-
-const dbConnection = mysql2.createPool({
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
-  host: 'localhost',
-  connectionLimit: 10
+const dotenv = require("dotenv");
+dotenv.config();
+const dbconnection = mysql2.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
 });
 
-// Connect to the database
-// dbConnection.getConnection((err) => {
+// console.log(process.env.DB_PASSWORD);
+
+// dbconnection.execute("SELECT 'test'", (err, result) => {
 //   if (err) {
-//     console.error("Database connection failed:", err.message);
-//     return;
+//     console.log("Connection/Query error:", err.message);
 //   } else {
-//     console.log("Connected to database successfully!");
+//     console.log("Query result:", result);
 //   }
 // });
 
-module.exports = dbConnection.promise();
-
-
+module.exports = dbconnection.promise();
