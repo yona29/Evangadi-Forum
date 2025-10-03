@@ -75,18 +75,19 @@ async function login(req, res) {
     if (!isMatch) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "invaild credential" });
+        .json({ msg: "invalid credential" });
     }
 
-    //if usename and password correct send token
     const username = user[0].username;
     const userid = user[0].userid;
+
     const token = jwt.sign({ username, userid }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
+
     return res
       .status(StatusCodes.OK)
-      .json({ message: "user login sucessfully", token });
+      .json({ msg: "user login sucessfull", token });
   } catch (error) {
     console.log(error.message);
     return res
