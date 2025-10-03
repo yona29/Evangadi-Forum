@@ -5,8 +5,8 @@ const cors = require("cors");
 // Import custom routes and middleware
 const answerRoutes = require("./routes/answerRoute");
 const questionRoutes = require("./routes/questionRoute");
-// const userRoutes = require("./routes/userRoute");
-// const installRoutes = require("./routes/installRoute");
+const userRoutes = require("./routes/userRoute");
+const installRoutes = require("./routes/installRoute");
 const authMiddleware = require("./middleware/authMiddleware");
 const dbConnection = require("./db/dbConfig");
 

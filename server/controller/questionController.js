@@ -56,43 +56,60 @@ async function question(req, res) {
   }
 }
 
-//get all question
-const getAllQuestions = async (req, res) => {
+// ---------------------- GET ALL QUESTIONS ----------------------
+async function Allquestion(req, res) {
   try {
-    const [rows] = await dbConnection.query(
-      "SELECT * FROM questionTable ORDER BY created_at DESC"
+    // Join questions with users to include author's username
+    const [results] = await dbConnection.query(
+      `SELECT 
+          questions.questionid AS question_id, 
+          questions.title, 
+          questions.description AS content, 
+          users.username AS user_name 
+       FROM questions 
+       JOIN users ON questions.userid = users.userid 
+       ORDER BY questions.id DESC`
     );
-    if (!rows.length) {
-      return res.status(404).json({ message: "No questions found" });
-    }
-    res.status(200).json(rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
 
-//get single question
-const getSingleQuestion = async (req, res) => {
+    return res.status(StatusCodes.OK).json({ questions: results });
+  } catch (error) {
+    console.error("Error retrieving questions:", error.message);
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ msg: "No questions found" });
+  }
+}
+
+// ---------------------- GET SINGLE QUESTION ----------------------
+async function getSingleQuestion(req, res) {
   const { question_id } = req.params;
-  
-   if (!question_id) {
-     return res
-       .status(StatusCodes.BAD_REQUEST)
-       .json({ msg: "Please provide a question ID." });
-   }
+
+  if (!question_id) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: "Please provide a question ID." });
+  }
 
   try {
-    const [rows] = await dbConnection.query(
-      "SELECT * FROM questionTable WHERE question_id = ?",
+    // Query database for the specific question
+    const [question] = await dbConnection.query(
+      "SELECT questionid, title, description, created_at, userid FROM questions WHERE questionid = ?",
       [question_id]
     );
-    if (!rows.length) {
-      return res.status(404).json({ message: "Question not found" });
-    }
-    res.status(200).json(rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
 
-module.exports = { question, getAllQuestions, getSingleQuestion };
+    if (question.length === 0) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ msg: "No question found with this ID." });
+    }
+
+    return res.status(StatusCodes.OK).json({ question: question[0] });
+  } catch (error) {
+    console.error("Error retrieving question:", error.message);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      msg: "Something went wrong, please try again!",
+    });
+  }
+}
+
+module.exports = { question, Allquestion, getSingleQuestion };

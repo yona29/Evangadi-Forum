@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
   question,
-  getAllQuestions,
+  Allquestion,
   getSingleQuestion,
 } = require("../controller/questionController");
 
@@ -11,19 +11,13 @@ const {
 
 const authMiddleware = require("../middleware/authMiddleware");
 
-//post quistion 
+//post quistion
 router.post("/question", authMiddleware, question);
 
-
 // Get all questions
-router.get("/quistion", authMiddleware, getAllQuestions);
-
-
+router.get("/question", authMiddleware, Allquestion);
 
 // Get single question
-router.get("/quistion/:question_id", authMiddleware, getSingleQuestion);
-
-
+router.get("/question/:question_id", authMiddleware, getSingleQuestion);
 
 module.exports = router;
-
