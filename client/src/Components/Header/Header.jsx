@@ -3,7 +3,7 @@ import React from "react";
 const Header = () => {
   return (
     <>
-      <p>This is where th header would be implemented.</p>
+      <p>This is the header part.</p>
     </>
   );
 };
