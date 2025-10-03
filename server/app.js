@@ -20,11 +20,12 @@ app.get("/", (req, res) => {
   res.send("Hello from Evangadi Forum!");
 });
 
-app.use("/api/answer", authMiddleware, answerRoutes)
-
+app.use("/", installRoutes); 
+app.use("/api/user", userRoutes); 
 // Beth - start
-app.use("/api/question", authMiddleware, questionRoutes);
+app.use("/api", authMiddleware, questionRoutes);
 // Beth - end
+app.use("/api", authMiddleware, answerRoutes); 
 
 // try conncet to database and if so app listen
 async function start() {

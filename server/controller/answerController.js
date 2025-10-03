@@ -32,3 +32,58 @@ async function postAnswer(req, res) {
     });
   }
 }
+// ---------------------- GET ANSWERS FOR A QUESTION ----------------------
+async function getAnswer(req, res) {
+  const { questionid } = req.params; // Get question ID from URL
+
+  // 1️⃣ Validate input: ensure question ID is provided
+  if (!questionid) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      msg: "Please provide a question ID.",
+    });
+  }
+
+  try {
+    // 2️⃣ Check if the question exists in the database
+    const [questions] = await dbConnection.query(
+      "SELECT questionid FROM questions WHERE questionid = ?",
+      [questionid]
+    );
+
+    if (questions.length === 0) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        message: "No question found with this ID.",
+      });
+    }
+
+    // 3️⃣ Retrieve all answers for this question along with user info
+    const [answers] = await dbConnection.query(
+      `SELECT 
+         answers.answerid, 
+         answers.answer, 
+         answers.userid, 
+         answers.created_at, 
+         users.username AS user_name 
+       FROM answers 
+       JOIN users ON answers.userid = users.userid 
+       WHERE questionid = ?`,
+      [questionid]
+    );
+
+    // 4️⃣ Respond with answers
+    return res.status(StatusCodes.OK).json({
+      questionid,
+      answers,
+    });
+  } catch (error) {
+    console.error("Error while retrieving answers:", error.message);
+    // 5️⃣ Handle unexpected server errors
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      msg: "Something went wrong, please try again!",
+    });
+  }
+}
+
+// ---------------------- EXPORT CONTROLLER FUNCTIONS ----------------------
+module.exports = { postAnswer, getAnswer };
+
