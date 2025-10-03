@@ -20,21 +20,22 @@ app.get("/", (req, res) => {
   res.send("Hello from Evangadi Forum!");
 });
 
-// Routes
 app.use("/", installRoutes); 
 app.use("/api/user", userRoutes); 
-app.use("/api", authMiddleware, questionRoutes); 
+// Beth - start
+app.use("/api", authMiddleware, questionRoutes);
+// Beth - end
 app.use("/api", authMiddleware, answerRoutes); 
 
-// Test DB connection
-(async function start() {
+// try conncet to database and if so app listen
+async function start() {
   try {
     await dbConnection.getConnection();
     console.log("✅ Database connection established");
   } catch (err) {
     console.error("❌ Database connection failed:", err.message);
   }
-})();
+};
 
 // Start server
 app.listen(port, () => {
