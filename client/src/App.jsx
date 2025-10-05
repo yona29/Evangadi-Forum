@@ -1,10 +1,10 @@
 import "./App.css";
-import Header from "./Components/Header/Header";
+import Router from "./Router";
 
 const App = () => {
   return (
     <>
-    <Header />
+    <Router />
     </>
   )
 }
