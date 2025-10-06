@@ -1,9 +1,3 @@
-THIS PROJECT IS CALLED EVANGADI FORUM
-
-It is an interactive web application (a forum) for Evangadi tech (evangadi.com).
-
-In the Evangadi forum platform members can ask/post quesitons, get answer for their questions, post answer for a question when they sign-up and login. They can also view a single question or all questions.
-
 **API DOCUMENTATION \- Evangadi Forum**
 
 **1 AUTHENTICATION MIDDLEWARE**
@@ -151,26 +145,3 @@ json
 * **Status Code:** 201 Created \- Question posted successfully.  
 * **Status Code:** 400 Bad Request \- Missing question text
 
-
-
-******************************************************************************
-
-
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
-
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
