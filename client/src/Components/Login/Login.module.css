@@ -1,6 +1,9 @@
 /* Base styles */
-body, .landing, .loginBox, .infoBox {
-  font-family: 'Poppins', 'Segoe UI', sans-serif;
+body,
+.landing,
+.loginBox,
+.infoBox {
+  font-family: "Poppins", "Segoe UI", sans-serif;
   color: #333;
   margin: 0;
   padding: 0;
@@ -25,9 +28,17 @@ body, .landing, .loginBox, .infoBox {
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  width: 584px;
+  width: 612px;
+  height: 520px;
   max-width: 100%;
-  height: auto;
+  /* height: auto; */
+
+  .errorMessage {
+    color: red;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+  }
 
   display: flex;
   flex-direction: column;
@@ -201,7 +212,8 @@ body, .landing, .loginBox, .infoBox {
     align-items: stretch;
   }
 
-  .loginBox, .infoBox {
+  .loginBox,
+  .infoBox {
     width: 100%;
   }
 }
