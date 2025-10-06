@@ -11,9 +11,9 @@ const About = () => {
         navigate("/how-it-works")
     }
   return (
-    <div className={classes.about-container}>
-        <h3 className={aboutTxt}>About</h3>
-      <h1 className={classes.about-title}>Evangadi Networks Q&A</h1>
+    <div className={classes.aboutContainer}>
+        <h3 className={classes.aboutTxt}>About</h3>
+      <h1 className={classes.aboutTitle}>Evangadi Networks Q&A</h1>
       <p className>
         No matter what stage of life you are in, whether you're just starting elementary school or being promoted to CEO of a Fortune company, you have much to offer to those who are trying to follow in your footsteps.
       </p>
