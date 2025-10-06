@@ -1,12 +1,10 @@
 import "./App.css";
-import Header from "./Components/Header/Header";
-import SignUp from "./Components/SignUp/SignUp";
+import Router from "./Router";
 
 const App = () => {
   return (
     <>
-    <Header />
-    <SignUp/>
+    <Router />
     </>
   )
 }
