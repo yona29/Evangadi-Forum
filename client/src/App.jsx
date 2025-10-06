@@ -1,20 +1,13 @@
 import "./App.css";
-<<<<<<< HEAD
-
-const App = () => {
-  return (
-    <div>
-      
-    </div>
-=======
 import Header from "./Components/Header/Header";
+import SignUp from "./Components/SignUp/SignUp";
 
 const App = () => {
   return (
     <>
     <Header />
+    <SignUp/>
     </>
->>>>>>> ada0af950fddb4274b8681d816abbb48349a3556
   )
 }
 
