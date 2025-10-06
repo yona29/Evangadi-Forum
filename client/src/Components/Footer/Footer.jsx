@@ -1,6 +1,6 @@
 import classes from "./Footer.module.css";
 import logo from "../../assets/footlogo.png";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // Import Material UI Icons
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -12,27 +12,30 @@ const Footer = () => {
     <section className={classes.footer_container}>
       {/* Logo + Social Media */}
       <div>
-        <a href="#">
+        <Link to="/">
           <img className={classes.eva_logo} src={logo} alt="Evangadi Logo" />
-        </a>
+        </Link>
         <div className={classes.footer_links}>
-          {/* Social Links */}
+          {/* Social Links + Icons */}
           <a
             href="https://www.facebook.com/evangaditech"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+          >
             <FacebookIcon fontSize="large" />
           </a>
           <a
             href="https://www.instagram.com/evangaditech/"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+          >
             <InstagramIcon fontSize="large" />
           </a>
           <a
             href="https://www.youtube.com/@EvangadiTech"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+          >
             <YouTubeIcon fontSize="large" />
           </a>
         </div>
@@ -43,13 +46,13 @@ const Footer = () => {
         <h1>Useful Links</h1>
         <ul>
           <li>
-            <a href="/how-it-works">How it works</a>
+            <Link to="/how-it-works">How it works</Link>
           </li>
           <li>
-            <a href="#">Terms of service</a>
+            <Link to="#">Terms of service</Link>
           </li>
           <li>
-            <a href="#">Privacy Policy</a>
+            <Link to="#">Privacy Policy</Link>
           </li>
         </ul>
       </div>
