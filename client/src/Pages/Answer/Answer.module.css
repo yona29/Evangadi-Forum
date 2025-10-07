@@ -44,7 +44,7 @@ main {
 
 .question_section p {
   font-size: 16px;
-  color: #555;
+  /* color: #555; */
   line-height: 1.7;
 }
 
@@ -71,7 +71,10 @@ main {
   font-size: 16px;
   color: #0077ff;
 }
-
+.answersCount{
+  color: #0077ff;
+  font-weight: bold;
+}
 /* ---------------- ANSWER SECTION ---------------- */
 .answer_section h2 {
   font-size: 26px;

@@ -6,7 +6,7 @@ const authMiddleware = require('../middleware/authMiddleware')
 
 
 // user controllers
-const { register, login, checkUser } = require('../controller/userController')
+const { register, login, checkuser } = require('../controller/userController')
 
 // register route
 router.post("/register", register)
@@ -16,7 +16,7 @@ router.post("/register", register)
 router.post("/login", login)
 
 //Check user
-router.get("/check", authMiddleware, checkUser)
+router.get("/check", authMiddleware, checkuser)
 
 
 module.exports = router

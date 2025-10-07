@@ -6,16 +6,21 @@ const dbconnection = mysql2.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-// console.log(process.env.DB_PASSWORD);
+// Test connection
+(async () => {
+  try {
+    const connection = await dbconnection.promise().getConnection();
+    console.log("✅ Connected to database successfully!");
+    connection.release();
+  } catch (err) {
+    console.error("❌ Database connection failed:", err.message);
+  }
+})();
 
-// dbconnection.execute("SELECT 'test'", (err, result) => {
-//   if (err) {
-//     console.log("Connection/Query error:", err.message);
-//   } else {
-//     console.log("Query result:", result);
-//   }
-// });
 
 module.exports = dbconnection.promise();

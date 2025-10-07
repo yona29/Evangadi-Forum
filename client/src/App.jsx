@@ -1,12 +1,7 @@
+import Router from "./Router";
 import "./App.css";
-import Header from "./Components/Header/Header";
-
 const App = () => {
-  return (
-    <>
-    <Header />
-    </>
-  )
-}
+  return <Router />;
+};
 
-export default App
+export default App;

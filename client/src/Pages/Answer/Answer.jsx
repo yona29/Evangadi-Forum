@@ -8,19 +8,15 @@ import Loader from "../../Components/Loader/Loader";
 function Answer() {
   const { questionId } = useParams();
 
-  // ✅ Local states
-  const [answer, setAnswer] = useState(""); // input field value
-  const [errorMessage, setErrorMessage] = useState(""); // error feedback
-  const [successMessage, setSuccessMessage] = useState(""); // success feedback
-  const [question, setQuestion] = useState({ title: "", description: "" }); // question data
-  const [answers, setAnswers] = useState([]); // answers list
-  const [isLoading, setIsLoading] = useState(false); // loader state
+  const [answer, setAnswer] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [question, setQuestion] = useState({ title: "", description: "" });
+  const [answers, setAnswers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const token = localStorage.getItem("token");
 
-  /**
-   * ✅ Fetch a single question by ID
-   */
   const fetchQuestion = async () => {
     try {
       setIsLoading(true);
@@ -40,9 +36,6 @@ function Answer() {
     }
   };
 
-  /**
-   * ✅ Fetch all answers for this question
-   */
   const fetchAnswers = async () => {
     try {
       setIsLoading(true);
@@ -52,7 +45,6 @@ function Answer() {
 
       console.log("Answers API Response:", response.data);
 
-      // ✅ Correct: API sends `answers` not `answer`
       setAnswers(response.data.answers || []);
     } catch (error) {
       console.error("Error fetching answers:", error.response?.data || error);
@@ -62,9 +54,6 @@ function Answer() {
     }
   };
 
-  /**
-   * ✅ Post a new answer
-   */
   const postAnswer = async (e) => {
     e.preventDefault();
 
@@ -85,11 +74,9 @@ function Answer() {
         setSuccessMessage("Answer posted successfully 👍");
         setAnswer(""); // clear textarea
 
-        // ✅ Append new answer directly instead of re-fetching
         if (response.data && response.data.newAnswer) {
           setAnswers((prev) => [...prev, response.data.newAnswer]);
         } else {
-          // fallback: re-fetch answers
           fetchAnswers();
         }
       }
@@ -101,13 +88,9 @@ function Answer() {
     }
   };
 
-  /**
-   * ✅ Load question + answers on first render OR when questionId changes
-   */
   useEffect(() => {
     fetchQuestion();
     fetchAnswers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionId]);
 
   return (
@@ -116,16 +99,18 @@ function Answer() {
         <Loader />
       ) : (
         <main>
-          {/* ================= Question Section ================= */}
           <section className={classes.question_section}>
             <h2>Question</h2>
             <h3>{question.title}</h3>
             <p className={classes.link_work}>{question.description}</p>
+            <p className={classes.answersCount}>
+              {answers.length} Answer{answers.length !== 1 ? "s" : ""} from
+              community
+            </p>
             <br />
             <hr />
           </section>
 
-          {/* ================= Answer List Section ================= */}
           <section className={classes.answer_section}>
             <h2>Answers From The Community</h2>
             <hr />
@@ -148,11 +133,9 @@ function Answer() {
             )}
           </section>
 
-          {/* ================= Post Answer Form ================= */}
           <section className={classes.answer_form}>
             <h2>Answer The Top Question</h2>
 
-            {/* ✅ Feedback messages */}
             {errorMessage && (
               <p className={classes.error} style={{ color: "red" }}>
                 {errorMessage}
