@@ -103,6 +103,10 @@ function Answer() {
             <h2>Question</h2>
             <h3>{question.title}</h3>
             <p className={classes.link_work}>{question.description}</p>
+            <p className={classes.answersCount}>
+              {answers.length} Answer{answers.length !== 1 ? "s" : ""} from
+              community
+            </p>
             <br />
             <hr />
           </section>

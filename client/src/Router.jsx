@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import ChatbotLayout from "./Components/Layout/Layout";
 import SimpleLayout from "./Components/Layout/SimpleLayout";
+import Article from "./Components/Articles/Articles";
 import Landing from "./pages/Landing/Landing";
 import Home from "./pages/Home/Home";
 import Question from "./pages/Question/Question";
@@ -17,6 +18,7 @@ function Router() {
 
       {/* Pages with Chatbot */}
       <Route element={<ChatbotLayout />}>
+        <Route path="/article" element={<Article />} />
         <Route path="/" element={<Home />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/question" element={<Question />} /> 
