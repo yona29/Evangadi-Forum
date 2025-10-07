@@ -85,7 +85,6 @@ const SignUp = ({ visible }) => {
               style={{ borderColor: error && !firstName ? "red" : "" }}
             />
           </div>
-
           <div>
             <input
               className={Classes.lastName}
@@ -148,7 +147,6 @@ const SignUp = ({ visible }) => {
           {isLoading ? <ClipLoader size={12} color="gray" /> : "Agree and Join"}
         </button>
       </form>
-
       <div className={Classes.login_link}>
         <Link onClick={() => setShow(false)}>Already have an account?</Link>
       </div>
