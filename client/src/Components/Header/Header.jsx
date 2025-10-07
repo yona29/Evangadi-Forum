@@ -6,7 +6,6 @@ import logo from "../../assets/evangadiLogo.png"
 const Header = () => {
   return (
     <header>
-      {/* <p>This is the header part.</p> */}
       <section className={styles.header_container}>
         <div className={styles.logo_container}>
           <a href="www.evangadi.com">
