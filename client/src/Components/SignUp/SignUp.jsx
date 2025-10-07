@@ -7,7 +7,6 @@ import { ClipLoader } from "react-spinners";
 
 const SignUp = ({ visible }) => {
   const { setShow } = visible;
-  // const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");

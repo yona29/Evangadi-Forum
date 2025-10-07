@@ -42,8 +42,8 @@
 .chat_header {
   display: flex;
   align-items: center;
-  justify-content: center; /* center text horizontally */
-  position: relative; /* for absolute positioning of close button */
+  justify-content: center; 
+  position: relative; 
   padding: 14px 18px;
   background: linear-gradient(135deg, #0077ff, #005bcc);
   color: white;
@@ -84,21 +84,21 @@
   flex-direction: column;
 }
 .chat_greeting_container {
-  position: absolute; /* stays in background */
+  position: absolute; 
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  pointer-events: none; /* allows clicks through */
+  pointer-events: none; 
   width: 80%;
   text-align: center;
 }
 
 .chat_greeting {
-  color: #4472f3ea; /* faded gray */
+  color: #4472f3ea; 
   font-size: 1.7rem;
   font-weight: bold;
   line-height: 1.5;
-  user-select: none; /* cannot select text */
+  user-select: none; 
 }
 
 /* Message container */

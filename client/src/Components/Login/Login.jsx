@@ -8,8 +8,8 @@ import { ClipLoader } from "react-spinners";
 
 function Login({ visible }) {
   const { setShow } = visible;
-  const [email, setEmail] = useState(""); // controlled email input
-  const [password, setPassword] = useState(""); // controlled password input
+  const [email, setEmail] = useState(""); 
+  const [password, setPassword] = useState(""); 
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
