@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import Classes from "./signUp.module.css";
+import Classes from "./SignUp.module.css";
 import { BiHide, BiShow } from "react-icons/bi";
 import axios from "../../Api/axios";
 import { Link } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
+
 const SignUp = ({ visible }) => {
-//   const { show, setShow } = visible;
-   const navigate = useNavigate();
+  const { setShow } = visible;
+  // const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -32,7 +32,7 @@ const SignUp = ({ visible }) => {
     }
 
     try {
-      const response = await axios.post("users/register", {
+      await axios.post("user/register", {
         username: userName,
         first_name: firstName,
         last_name: lastName,
@@ -40,7 +40,6 @@ const SignUp = ({ visible }) => {
         password: password,
       });
       console.log("User Registerd");
-      navigate('/login');
       setShow(false);
     } catch (error) {
       setIsLoading(false);
@@ -52,7 +51,6 @@ const SignUp = ({ visible }) => {
       }
     }
   };
-
   return (
     <div className={Classes.signup_container}>
       <h2>Join the network</h2>
@@ -85,10 +83,11 @@ const SignUp = ({ visible }) => {
               style={{ borderColor: error && !firstName ? "red" : "" }}
             />
           </div>
+
           <div>
             <input
               className={Classes.lastName}
-              size="26"
+              size="27"
               type="text"
               placeholder="Last name"
               value={lastName}
@@ -131,13 +130,13 @@ const SignUp = ({ visible }) => {
             )}
           </button>
         </div>
-        <div className={Classes.paragrap}>
+        <div className={Classes.paragraph}>
           <p>
             I agree to the
-            <a href="https://www.evangadi.com/legal/privacy/">
+            <Link href="https://www.evangadi.com/legal/privacy/">
               {" "}
               privacy policy{" "}
-            </a>
+            </Link>
             and{" "}
             <a href="https://www.evangadi.com/legal/terms/">terms of service</a>
             .
@@ -147,10 +146,12 @@ const SignUp = ({ visible }) => {
           {isLoading ? <ClipLoader size={12} color="gray" /> : "Agree and Join"}
         </button>
       </form>
+
       <div className={Classes.login_link}>
         <Link onClick={() => setShow(false)}>Already have an account?</Link>
       </div>
     </div>
   );
 };
+
 export default SignUp;

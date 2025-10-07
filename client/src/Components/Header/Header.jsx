@@ -1,40 +1,103 @@
-import React from "react";
-import styles from "./Header.module.css"
-import logo from "../../assets/evangadiLogo.png"
-
+import { useEffect, useState } from "react";
+import classes from "./Header.module.css";
+import logo from "../../assets/evangadiLogo.png";
+import { AiOutlineMenu } from "react-icons/ai";
+import { IoMdClose } from "react-icons/io";
+import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
-  return (
-    <header>
-      {/* <p>This is the header part.</p> */}
-      <section className={styles.header_container}>
-        <div className={styles.logo_container}>
-          <a href="www.evangadi.com">
-            <img src={logo} />{" "}
-          </a>
-        </div>
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-        <div className={styles.links}>
-          <ul>
-            <li>
-              <a href="/home">Home</a>
-            </li>
-            <li>
-              <a href="/how-it-works">How it Works</a>
-            </li>
-            <li>
-              <a href="/login">
-                <button className={`${styles.blue_bg} ${styles.signin}`}>SIGN IN</button>
-              </a>
-            </li>
-            <li className={styles.links}>
-              <a href="logout">
-                <button className={`${styles.blue_bg} ${styles.logout}`}>logOut</button>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+  // Logout handler
+  const signOut = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+    navigate("/login");
+  };
+
+  // Toggle sidebar open/close
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  // Check login status on load
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token);
+  }, [location]);
+
+  return (
+    <header className={classes.header}>
+      {/* Logo */}
+      <div className={classes.header__logo}>
+        <Link to="/">
+          <img src={logo} alt="Evangadi Logo" />
+        </Link>
+      </div>
+
+      {/* Desktop nav */}
+      <div className={classes.header__right}>
+        <nav className={classes.header__nav}>
+          <Link to="/">Home</Link>
+          <Link to="/how-it-works">How it works</Link>
+        </nav>
+
+        {isAuthenticated ? (
+          <button className={classes.header__signin} onClick={signOut}>
+            SIGN OUT
+          </button>
+        ) : (
+          <button
+            className={classes.header__signin}
+            onClick={() => navigate("/login")}
+          >
+            SIGN IN
+          </button>
+        )}
+      </div>
+
+      {/* Mobile menu icon */}
+      <div className={classes.header__menu_icon} onClick={toggleSidebar}>
+        <AiOutlineMenu />
+      </div>
+
+      {/* Sidebar */}
+      <div
+        className={`${classes.header__sidebar} ${
+          isSidebarOpen ? classes.active : ""
+        }`}
+      >
+        <span className={classes.header__close_icon} onClick={toggleSidebar}>
+          <IoMdClose />
+        </span>
+
+        <nav className={classes.header__nav}>
+          <Link to="/" onClick={toggleSidebar}>
+            Home
+          </Link>
+          <Link to="/how-it-works" onClick={toggleSidebar}>
+            How it works
+          </Link>
+        </nav>
+
+        {isAuthenticated ? (
+          <button className={classes.header__signin} onClick={signOut}>
+            SIGN OUT
+          </button>
+        ) : (
+          <button
+            className={classes.header__signin}
+            onClick={() => {
+              toggleSidebar();
+              navigate("/login");
+            }}
+          >
+            SIGN IN
+          </button>
+        )}
+      </div>
     </header>
   );
 };

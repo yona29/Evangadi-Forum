@@ -59,9 +59,7 @@ const Chatbot = () => {
       const userRequest = axios.get("/user/check", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const [userResponse] = await Promise.all([
-        userRequest
-      ]);
+      const [userResponse] = await Promise.all([userRequest]);
       setUser(userResponse.data.username);
     } catch (err) {
       setChatMessages((prev) => [
