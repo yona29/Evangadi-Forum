@@ -20,7 +20,7 @@ const Header = () => {
               <a href="/home">Home</a>
             </li>
             <li>
-              <a href="/howItWorks">How it Works</a>
+              <a href="/how-it-works">How it Works</a>
             </li>
             <li>
               <a href="/login">
