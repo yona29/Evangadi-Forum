@@ -9,23 +9,33 @@ const userRoutes = require("./routes/userRoute");
 const installRoutes = require("./routes/installRoute");
 const authMiddleware = require("./middleware/authMiddleware");
 const dbConnection = require("./db/dbConfig");
+const groupRoutes = require("./routes/groupRoute");
 
 const app = express();
-const port = process.env.PORT;
-app.use(cors()); 
-app.use(express.json()); 
+const port = process.env.PORT || 5500; //default port
+app.use(cors());
+app.use(express.json());
 
 // Test route
 app.get("/", (req, res) => {
   res.send("Hello from Evangadi Forum!");
 });
 
-app.use("/", installRoutes); 
-app.use("/api/user", userRoutes); 
+//
+
+//
+app.use("/", installRoutes);
+app.use("/api/user", userRoutes);
 // Beth - start
-app.use("/api", authMiddleware, questionRoutes);
+// app.use("/api", authMiddleware, questionRoutes);
 // Beth - end
-app.use("/api", authMiddleware, answerRoutes); 
+// app.use("/api", authMiddleware, answerRoutes);
+//group route
+// app.use("/api", authMiddleware, groupRoutes);
+
+
+app.use("/api/groups", groupRoutes); //for testing
+
 
 // try conncet to database and if so app listen
 async function start() {
@@ -41,8 +51,4 @@ async function start() {
 app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
 });
-
-
-
-
 
