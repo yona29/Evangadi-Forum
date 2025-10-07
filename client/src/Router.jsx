@@ -19,8 +19,8 @@ function Router() {
       <Route element={<ChatbotLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/question" element={<Question />} />
-        <Route path="/home/answers/:questionId" element={<Answer />} />
+        <Route path="/question" element={<Question />} /> 
+       <Route path="/home/answers/:questionId" element={<Answer />} />
       </Route>
     </Routes>
   );
