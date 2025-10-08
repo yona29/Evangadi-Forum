@@ -5,8 +5,12 @@ import "./App.css";
 import { BrowserRouter } from "react-router-dom";
 import DataContext from "./context/DataContext.jsx";
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
-)
+    <BrowserRouter>
+      <DataContext>
+        <App />
+      </DataContext>
+    </BrowserRouter>
+  </StrictMode>
+);
