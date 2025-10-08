@@ -23,6 +23,34 @@ CREATE TABLE IF NOT EXISTS groups (
   FOREIGN KEY (created_by) REFERENCES users(userid) ON DELETE SET NULL
 );
 
+--Group Columns - insert default groups (prevent duplicates)
+INSERT INTO groups (name, slug, description, is_demo)
+SELECT * FROM (SELECT 'Web Development', 'web-dev', 'All about front-end, back-end, and full stack topics.', TRUE) AS tmp
+WHERE NOT EXISTS (
+  SELECT 1 FROM groups WHERE slug = 'web-dev'
+) LIMIT 1;
+
+INSERT INTO groups (name, slug, description, is_demo)
+SELECT * FROM (SELECT 'Machine Learning', 'ml', 'Discussions about AI and machine learning models.', TRUE) AS tmp
+WHERE NOT EXISTS (
+  SELECT 1 FROM groups WHERE slug = 'ml'
+) LIMIT 1;
+
+INSERT INTO groups (name, slug, description, is_demo)
+SELECT * FROM (SELECT 'Algebra', 'algebra', 'Learn Algebra fundamentals and beyond.', TRUE) AS tmp
+WHERE NOT EXISTS (
+  SELECT 1 FROM groups WHERE slug = 'algebra'
+) LIMIT 1;
+
+INSERT INTO groups (name, slug, description, is_demo)
+SELECT * FROM (SELECT 'Software Testing', 'software-testing', 'All about testing methodologies and QA practices.', TRUE) AS tmp
+WHERE NOT EXISTS (
+  SELECT 1 FROM groups WHERE slug = 'software-testing'
+) LIMIT 1;
+
+INSERT INTO
+
+
 --Connects User to Community Group table
 CREATE TABLE IF NOT EXISTS user_groups (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
