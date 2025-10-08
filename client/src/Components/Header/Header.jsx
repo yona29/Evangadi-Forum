@@ -42,6 +42,10 @@ const Header = () => {
         <nav className={classes.header__nav}>
           <Link to="/">Home</Link>
           <Link to="/how-it-works">How it works</Link>
+          {/* display this only if the user is logged-in */}
+          {isAuthenticated && (
+            <Link to="/community-groups">Join Community Group</Link>
+          )}
         </nav>
 
         {isAuthenticated ? (
@@ -80,6 +84,10 @@ const Header = () => {
           <Link to="/how-it-works" onClick={toggleSidebar}>
             How it works
           </Link>
+          {isAuthenticated && (
+            <Link to="/community-groups">Community Groups</Link>
+          )}
+          {/*new*/}
         </nav>
 
         {isAuthenticated ? (
