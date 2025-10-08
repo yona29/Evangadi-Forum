@@ -14,6 +14,16 @@
   transition: all 0.3s ease;
 }
 
+/* header new part */
+/* nav icons links  */
+.header__sidebar .header__nav {
+  display: flex;
+  flex-direction: column;   
+  align-items: flex-start;  
+  gap: 1rem;                
+}
+/* header new part end */
+
 /* Logo */
 .header__logo img {
   width: 130px;
@@ -152,5 +162,12 @@
 
   .header__logo img {
     width: 110px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header__sidebar a {
+    font-size: 15px;
+    white-space: nowrap; /* keep text on one line */
   }
 }

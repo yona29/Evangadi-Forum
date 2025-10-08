@@ -10,10 +10,10 @@ const aiRoute = require("./routes/aiRoute");
 const installRoutes = require("./routes/installRoute");
 const authMiddleware = require("./middleware/authMiddleware");
 const dbConnection = require("./db/dbConfig");
-const groupRoutes = require("./routes/groupRoute");
+const groupRoutes = require("./routes/groupRoute"); //new
 
 const app = express();
-const port = process.env.PORT || 5500; //default port
+const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 
@@ -22,17 +22,16 @@ app.get("/", (req, res) => {
   res.send("Hello from Evangadi Forum!");
 });
 
-//
-
-//
 app.use("/", installRoutes);
 app.use("/api/user", userRoutes);
-// Beth - start
-// app.use("/api", authMiddleware, questionRoutes);
-// Beth - end
-app.use("/api", authMiddleware, answerRoutes); 
+app.use("/api", authMiddleware, questionRoutes);
+app.use("/api", authMiddleware, answerRoutes);
+app.use("/api/ai", authMiddleware, aiRoute);
+app.use("/api/groups", authMiddleware, groupRoutes); //new
 
-// try conncet to database and if so app listen
+
+
+// Attempt database connection; on success, the app starts listening.
 async function start() {
   try {
     await dbConnection.getConnection();
@@ -40,10 +39,9 @@ async function start() {
   } catch (err) {
     console.error("❌ Database connection failed:", err.message);
   }
-};
+}
 
 // Start server
 app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
 });
-

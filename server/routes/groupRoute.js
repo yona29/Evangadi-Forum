@@ -1,72 +1,77 @@
-
-
-
 const express = require("express");
 const router = express.Router();
 const db = require("../db/dbConfig");
 
-// ✅ Get all groups - The root path for /api/groups
 router.get("/", async (req, res) => {
-  console.log("--> GET /api/groups route hit"); // Debug log
+  const userid = req.user.userid; // from auth middleware
   try {
-    const [groups] = await db.query("SELECT * FROM groups");
-    res.json(groups);
+    const [groups] = await db.query(
+      `
+      SELECT g.*,
+             COUNT(ug.userid) AS memberCount,
+             MAX(CASE WHEN ug.userid = ? THEN 1 ELSE 0 END) AS joined
+      FROM groups g
+      LEFT JOIN user_groups ug ON g.groupid = ug.groupid
+      GROUP BY g.groupid
+    `,
+      [userid]
+    );
+
+    // Convert joined from 0/1 to boolean
+    const groupsWithJoined = groups.map((g) => ({
+      ...g,
+      joined: g.joined === 1,
+    }));
+
+    res.json(groupsWithJoined);
   } catch (err) {
     console.error("Error fetching groups:", err);
     res.status(500).json({ error: "Failed to fetch groups" });
   }
 });
 
-// ✅ Join a group
-router.post("/:groupid/join", async (req, res) => {
+//Toggle join/leave group for the logged-in user
+
+router.post("/:groupid/toggle", async (req, res) => {
   const { groupid } = req.params;
-  const { userid } = req.body; // user ID from frontend
+  const userid = req.user.userid; // from auth middleware
 
   try {
-    await db.query(
-      "INSERT IGNORE INTO user_groups (userid, groupid) VALUES (?, ?)",
+    // Check if user already joined
+    const [existing] = await db.query(
+      "SELECT * FROM user_groups WHERE userid = ? AND groupid = ?",
       [userid, groupid]
     );
-    res.json({ message: "User joined group successfully" });
-  } catch (err) {
-    console.error("Error joining group:", err);
-    res.status(500).json({ error: "Failed to join group" });
-  }
-});
 
-// ✅ Leave a group
-router.delete("/:groupid/leave", async (req, res) => {
-  const { groupid } = req.params;
-  const { userid } = req.body;
+    let status;
+    if (existing.length > 0) {
+      // Already joined & leave
+      await db.query(
+        "DELETE FROM user_groups WHERE userid = ? AND groupid = ?",
+        [userid, groupid]
+      );
+      status = "left";
+    } else {
+      // Not joined & join
+      await db.query(
+        "INSERT INTO user_groups (userid, groupid) VALUES (?, ?)",
+        [userid, groupid]
+      );
+      status = "joined";
+    }
 
-  try {
-    await db.query("DELETE FROM user_groups WHERE userid = ? AND groupid = ?", [
-      userid,
-      groupid,
-    ]);
-    res.json({ message: "User left group successfully" });
+    // Get updated member count
+    const [countResult] = await db.query(
+      "SELECT COUNT(*) AS memberCount FROM user_groups WHERE groupid = ?",
+      [groupid]
+    );
+    const memberCount = countResult[0].memberCount;
+
+    res.json({ status, memberCount });
   } catch (err) {
-    console.error("Error leaving group:", err);
-    res.status(500).json({ error: "Failed to leave group" });
+    console.error("Error toggling group join:", err);
+    res.status(500).json({ error: "Failed to toggle group join" });
   }
 });
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
