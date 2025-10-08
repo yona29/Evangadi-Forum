@@ -1,14 +1,7 @@
-import "./App.css";
 import Router from "./Router";
-import CommunityGroups from './Components/CommunityGroups/CommunityGroups';
-
+import "./App.css";
 const App = () => {
-  return (
-    <>
-    <Router />
-    <CommunityGroups />
-    </>
-  )
-}
+  return <Router />;
+};
 
-export default App
+export default App;

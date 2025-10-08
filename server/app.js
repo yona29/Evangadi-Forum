@@ -6,6 +6,7 @@ const cors = require("cors");
 const answerRoutes = require("./routes/answerRoute");
 const questionRoutes = require("./routes/questionRoute");
 const userRoutes = require("./routes/userRoute");
+const aiRoute = require("./routes/aiRoute");
 const installRoutes = require("./routes/installRoute");
 const authMiddleware = require("./middleware/authMiddleware");
 const dbConnection = require("./db/dbConfig");
@@ -29,13 +30,7 @@ app.use("/api/user", userRoutes);
 // Beth - start
 // app.use("/api", authMiddleware, questionRoutes);
 // Beth - end
-// app.use("/api", authMiddleware, answerRoutes);
-//group route
-// app.use("/api", authMiddleware, groupRoutes);
-
-
-app.use("/api/groups", groupRoutes); //for testing
-
+app.use("/api", authMiddleware, answerRoutes); 
 
 // try conncet to database and if so app listen
 async function start() {
