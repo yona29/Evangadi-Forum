@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import classes from "./Group.module.css";
+import classes from "./Groups.module.css";
 
 const Groups = () => {
   const [groups, setGroups] = useState([]);

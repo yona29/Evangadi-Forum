@@ -3,11 +3,8 @@ const router = express.Router();
 const {
   getAllGroups,
   toggleGroupMembership,
-} = require("../controllers/groupController");
+} = require("../controller/groupController");
 const authMiddleware = require("../middleware/authMiddleware");
-
-// Protect all routes with auth
-router.use();
 
 // Routes
 router.get("/", authMiddleware, getAllGroups);
