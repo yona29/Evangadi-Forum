@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import api from "../../Api/axios"; // your axios instance
 import classes from "./Groups.module.css";
 
 const Groups = () => {
@@ -9,15 +10,9 @@ const Groups = () => {
     const fetchGroups = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5500/api/groups", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+        const { data } = await api.get("/groups", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        const data = await res.json();
         setGroups(data);
       } catch (err) {
         console.error(err);
@@ -31,20 +26,12 @@ const Groups = () => {
   const toggleJoin = async (groupid) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(
-        `http://localhost:5500/api/groups/${groupid}/toggle`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const { data } = await api.post(
+        `/groups/${groupid}/toggle`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      const data = await res.json();
-
-      // Update state with new join status and member count
       setGroups((prev) =>
         prev.map((g) =>
           g.groupid === groupid

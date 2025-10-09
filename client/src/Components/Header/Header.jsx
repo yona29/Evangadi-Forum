@@ -44,7 +44,7 @@ const Header = () => {
           <Link to="/how-it-works">How it works</Link>
           {/* display this only if the user is logged-in */}
           {isAuthenticated && (
-            <Link to="/community-groups">Join Community Group</Link>
+            <Link to="/community-groups">Join Group</Link>
           )}
         </nav>
 
@@ -85,7 +85,7 @@ const Header = () => {
             How it works
           </Link>
           {isAuthenticated && (
-            <Link to="/community-groups">Community Groups</Link>
+            <Link to="/community-groups">Join Group</Link>
           )}
           {/*new*/}
         </nav>
