@@ -79,7 +79,7 @@ const Question = () => {
         <div className={classes.form_section}>
           <h3 className={classes.post_title_2}>Ask a public question</h3>
           <Link to="/" className={classes.go_to}>
-            Go to Question page
+            Go to Home page
           </Link>
           {alertMessage && (
             <div
