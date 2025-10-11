@@ -80,7 +80,6 @@ function Login({ visible }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
         {/* Password Input */}
         <div className={classes.password_field}>
           <input
@@ -103,7 +102,9 @@ function Login({ visible }) {
             )}
           </button>
         </div>
-
+        <p className="forgot-password">
+          <Link to="/forgot-password">Forgot your password?</Link>
+        </p>
         {/* Submit Button */}
         <button className={classes.submit} type="submit" disabled={isLoading}>
           {isLoading ? <ClipLoader size={12} color="gray" /> : "Sign In"}

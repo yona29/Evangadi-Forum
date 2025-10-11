@@ -8,6 +8,8 @@ import Question from "./Pages/Question/Question";
 import HowItWorks from "./Pages/HowItWorks/HowItWorks";
 import Groups from "./Pages/Groups/Groups";
 import Answer from "./Pages/Answer/Answer";
+import ForgotPassword from "./Pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./Pages/ForgotPassword/ResetPassword";
 function Router() {
   return (
     <Routes>
@@ -22,9 +24,11 @@ function Router() {
         <Route path="/" element={<Home />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/community-groups" element={<Groups />} />
-        {/* NEW ROUTE */}
         <Route path="/question" element={<Question />} />
         <Route path="/home/answers/:questionId" element={<Answer />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="*" element={<h1>404 Not Found</h1>} />
       </Route>
     </Routes>
   );
