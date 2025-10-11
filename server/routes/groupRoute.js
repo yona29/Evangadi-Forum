@@ -4,10 +4,9 @@ const {
   getAllGroups,
   toggleGroupMembership,
 } = require("../controller/groupController");
-const authMiddleware = require("../middleware/authMiddleware");
 
 // Routes
-router.get("/", authMiddleware, getAllGroups);
-router.post("/:groupid/toggle", authMiddleware, toggleGroupMembership);
+router.get("/", getAllGroups);
+router.post("/:groupid/toggle", toggleGroupMembership);
 
 module.exports = router;

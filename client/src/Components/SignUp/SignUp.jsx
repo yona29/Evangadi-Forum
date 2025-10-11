@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import Classes from "./SignUp.module.css";
 import { BiHide, BiShow } from "react-icons/bi";
 import axios from "../../Api/axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 
 const SignUp = ({ visible }) => {
   const { setShow } = visible;
+  const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -39,7 +40,8 @@ const SignUp = ({ visible }) => {
         password: password,
       });
       console.log("User Registerd");
-      setShow(false);
+      setShow(false); // close signup modal
+      navigate("/");
     } catch (error) {
       setIsLoading(false);
       if (error.response) {

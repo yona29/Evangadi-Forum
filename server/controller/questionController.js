@@ -21,7 +21,11 @@ async function question(req, res) {
       msg: "Title must be less than 200 characters",
     });
   }
-
+  if (description.length > 1000) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      msg: "Description must be less than 1000 characters",
+    });
+  }
   try {
     // Get user info from auth middleware (JWT)
     const userid = req.user.userid;

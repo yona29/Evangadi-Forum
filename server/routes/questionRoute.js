@@ -7,17 +7,15 @@ const {
   getSingleQuestion,
 } = require("../controller/questionController");
 
-// Import authentication middleware
 
-const authMiddleware = require("../middleware/authMiddleware");
 
 //post quistion
-router.post("/question", authMiddleware, question);
+router.post("/question",  question);
 
 // Get all questions
-router.get("/question", authMiddleware, Allquestion);
+router.get("/question", Allquestion);
 
 // Get single question
-router.get("/question/:question_id", authMiddleware, getSingleQuestion);
+router.get("/question/:question_id", getSingleQuestion);
 
 module.exports = router;
