@@ -16,7 +16,7 @@ const Groups = () => {
           },
         });
 
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`); //if the HTTP is successful 
         const data = await res.json();
         setGroups(data);
       } catch (err) {
