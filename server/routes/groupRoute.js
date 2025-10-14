@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router(); //Creates a new router object using express.Router().
 const db = require("../db/dbConfig");
 
 router.get("/", async (req, res) => {

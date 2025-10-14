@@ -1,6 +1,6 @@
 const dbConnection = require("../db/dbConfig");
 const { StatusCodes } = require("http-status-codes");
-const { v4: uuidv4 } = require("uuid");
+const { v4: uuidv4 } = require("uuid"); //generate universally unique identifiers (UUIDs)
 
 // ---------------------- CREATE A NEW QUESTION ----------------------
 async function question(req, res) {
@@ -57,10 +57,13 @@ async function question(req, res) {
 }
 
 // ---------------------- GET ALL QUESTIONS ----------------------
-async function Allquestion(req, res) {
+
+//it uses async function, db usually takes time so while waiting DB for our request, it will do the other things
+async function Allquestion(req, res) { //req -->HTTP request & res -->HTTP response
   try {
     // Join questions with users to include author's username
     const [results] = await dbConnection.query(
+     //dbConnection.query executes a SQL query to fetch data from the DB. We rename questionid, userid, and username to: 1. easy to read and consistent to JS naming (snake_case or camelCase) and 2. since we join two tables and both have id or username column renaming will avoid duplicates
       `SELECT 
           questions.questionid AS question_id, 
           questions.title, 
@@ -71,20 +74,21 @@ async function Allquestion(req, res) {
        ORDER BY questions.id DESC`
     );
 
-    return res.status(StatusCodes.OK).json({ questions: results });
+    return res.status(StatusCodes.OK).json({ questions: results }); //sends back a JSON response containing all questions 
   } catch (error) {
     console.error("Error retrieving questions:", error.message);
     return res
-      .status(StatusCodes.NOT_FOUND)
+      .status(StatusCodes.NOT_FOUND)        //if not, it will log the error and responds NOT FOUND
       .json({ msg: "No questions found" });
   }
 }
 
 // ---------------------- GET SINGLE QUESTION ----------------------
 async function getSingleQuestion(req, res) {
-  const { question_id } = req.params;
+  const { question_id } = req.params; ///question/:question_id
 
   if (!question_id) {
+    //checks if the question_id is missing if it does returns bad request
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json({ msg: "Please provide a question ID." });
@@ -93,17 +97,18 @@ async function getSingleQuestion(req, res) {
   try {
     // Query database for the specific question
     const [question] = await dbConnection.query(
-      "SELECT questionid, title, description, created_at, userid FROM questions WHERE questionid = ?",
+      "SELECT questionid, title, description, created_at, userid FROM questions WHERE questionid = ?", // is the placeholder to prevent SQL Injections
       [question_id]
     );
 
     if (question.length === 0) {
+      //if the query returns an empty array
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ msg: "No question found with this ID." });
     }
 
-    return res.status(StatusCodes.OK).json({ question: question[0] });
+    return res.status(StatusCodes.OK).json({ question: question[0] }); //
   } catch (error) {
     console.error("Error retrieving question:", error.message);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
