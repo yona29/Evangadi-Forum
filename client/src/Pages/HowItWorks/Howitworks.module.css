@@ -15,7 +15,7 @@
   text-align: center;
   font-size: 2.2rem;
   font-weight: 700;
-  background: linear-gradient(to right, #fd5310, #000);
+  background: linear-gradient(135deg, #ec9b03, rgb(2, 14, 29));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 25px;
@@ -26,7 +26,7 @@
   line-height: 1.8;
   text-align: justify;
   padding: 10px 15px;
-  border-left: 4px solid #fe8302;
+  border-left: 4px solid #ffc507;
   background-color: #f9f9f9;
   border-radius: 8px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;

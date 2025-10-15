@@ -7,10 +7,9 @@ const { postAnswer, getAnswer } = require("../controller/answerController");
 
 
 // Import authentication middleware
-const authMiddleware = require("../middleware/authMiddleware");
 
-router.post("/answer/:questionid", authMiddleware, postAnswer);
+router.post("/answer/:questionid",  postAnswer);
 
-router.get("/answer/:questionid", authMiddleware, getAnswer);
+router.get("/answer/:questionid",  getAnswer);
 
 module.exports = router;

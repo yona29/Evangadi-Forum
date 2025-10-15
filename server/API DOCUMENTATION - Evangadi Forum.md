@@ -145,3 +145,14 @@ json
 * **Status Code:** 201 Created \- Question posted successfully.  
 * **Status Code:** 400 Bad Request \- Missing question text
 
+**9 POST QUESTION TO AI**
+
+**Description:** Submits a new question.
+
+**Endpoint:** /api/ai/ask
+**Method:** POST  
+**Request Body (JSOn):**  
+	json  
+{
+  "prompt": "Explain closures in JavaScript."
+} 

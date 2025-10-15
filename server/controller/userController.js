@@ -52,7 +52,9 @@ async function register(req, res) {
     });
   }
 }
-// may be zebibu part
+
+// user login
+
 async function login(req, res) {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -68,14 +70,14 @@ async function login(req, res) {
     if (user.length === 0) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "invaild credential" });
+        .json({ message: "invaild Email" });
     }
     const isMatch = await bcrypt.compare(password, user[0].password);
 
     if (!isMatch) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ msg: "invalid credential" });
+        .json({ msg: "invalid Password" });
     }
 
     const username = user[0].username;

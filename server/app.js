@@ -7,6 +7,7 @@ const answerRoutes = require("./routes/answerRoute");
 const questionRoutes = require("./routes/questionRoute");
 const userRoutes = require("./routes/userRoute");
 const aiRoute = require("./routes/aiRoute");
+const authRoutes = require("./routes/authRoute");
 const installRoutes = require("./routes/installRoute");
 const authMiddleware = require("./middleware/authMiddleware");
 const dbConnection = require("./db/dbConfig");
@@ -24,10 +25,12 @@ app.get("/", (req, res) => {
 
 app.use("/", installRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api", authMiddleware, questionRoutes);
 app.use("/api", authMiddleware, answerRoutes);
 app.use("/api/ai", authMiddleware, aiRoute);
 app.use("/api/groups", authMiddleware, groupRoutes); //new
+
 
 
 
