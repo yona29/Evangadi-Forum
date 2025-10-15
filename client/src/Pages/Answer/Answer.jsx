@@ -93,6 +93,18 @@ function Answer() {
     fetchAnswers();
   }, [questionId]);
 
+  // 🕒 Auto-hide success/error messages after 3 seconds
+
+  useEffect(() => {
+    if (errorMessage || successMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+        setSuccessMessage("");
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage, successMessage]);
+  
   return (
     <>
       {isLoading ? (
