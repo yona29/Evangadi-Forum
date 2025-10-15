@@ -93,7 +93,6 @@ function Answer() {
     fetchAnswers();
   }, [questionId]);
 
-  // 🕒 Auto-hide success/error messages after 3 seconds
 
   useEffect(() => {
     if (errorMessage || successMessage) {
@@ -104,7 +103,7 @@ function Answer() {
       return () => clearTimeout(timer);
     }
   }, [errorMessage, successMessage]);
-  
+
   return (
     <>
       {isLoading ? (
