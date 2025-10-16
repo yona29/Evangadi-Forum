@@ -13,9 +13,11 @@ const Home = () => {
   const [questions, setQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchItem, setSearchItem] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionsPerPage = 3;
   const navigate = useNavigate();
 
-  // Fetch user info and questions in parallel
+  // Fetch user info and questions
   const loadData = async () => {
     if (!token) {
       navigate("/login");
@@ -23,7 +25,6 @@ const Home = () => {
     }
 
     setIsLoading(true);
-
     try {
       const userRequest = axios.get("/user/check", {
         headers: { Authorization: `Bearer ${token}` },
@@ -53,10 +54,45 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Filter questions dynamically
+  // Filter and paginate questions
   const filteredQuestions = questions.filter((q) =>
     q.title.toLowerCase().includes(searchItem.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filteredQuestions.length / questionsPerPage);
+  const startIndex = (currentPage - 1) * questionsPerPage;
+  const currentQuestions = filteredQuestions.slice(
+    startIndex,
+    startIndex + questionsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // ✅ Show only 3 pagination numbers at a time
+  const renderPageNumbers = () => {
+    let start = Math.max(1, currentPage - 1);
+    let end = Math.min(totalPages, start + 2);
+    if (end - start < 2) start = Math.max(1, end - 2);
+
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={currentPage === i ? classes.activePage : ""}
+        >
+          {i}
+        </button>
+      );
+    }
+    return pages;
+  };
 
   if (isLoading) return <Loader />;
 
@@ -83,17 +119,20 @@ const Home = () => {
               <input
                 type="text"
                 value={searchItem}
-                onChange={(e) => setSearchItem(e.target.value)}
+                onChange={(e) => {
+                  setSearchItem(e.target.value);
+                  setCurrentPage(1); // reset to page 1 on search
+                }}
                 placeholder="🔍 Search questions..."
               />
             </div>
           </div>
 
           <div>
-            {filteredQuestions.length === 0 ? (
+            {currentQuestions.length === 0 ? (
               <p>No questions found.</p>
             ) : (
-              filteredQuestions.map((question) => (
+              currentQuestions.map((question) => (
                 <div
                   className={classes.question__outercontainer}
                   key={question.question_id}
@@ -101,7 +140,7 @@ const Home = () => {
                   <div className={classes.home__questioncontainer}>
                     <div className={classes.home__iconandusernamecontainer}>
                       <div>
-                        <IoMdContact size={80} />
+                        <IoMdContact size={60} />
                         <p className={classes.home__questionusename}>
                           {question.user_name}
                         </p>
@@ -121,6 +160,25 @@ const Home = () => {
               ))
             )}
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className={classes.pagination}>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                ← Prev
+              </button>
+              {renderPageNumbers()}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next →
+              </button>
+            </div>
+          )}
         </div>
 
         {/* RIGHT SIDE: Article */}
