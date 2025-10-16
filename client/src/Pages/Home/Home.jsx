@@ -14,7 +14,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchItem, setSearchItem] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const questionsPerPage = 3;
+  const questionsPerPage = 5;
   const navigate = useNavigate();
 
   // Fetch user info and questions
