@@ -62,12 +62,11 @@ async function question(req, res) {
 
 // ---------------------- GET ALL QUESTIONS ----------------------
 
-//it uses async function, db usually takes time so while waiting DB for our request, it will do the other things
-async function Allquestion(req, res) { //req -->HTTP request & res -->HTTP response
+async function Allquestion(req, res) { 
   try {
     // Join questions with users to include author's username
     const [results] = await dbConnection.query(
-     //dbConnection.query executes a SQL query to fetch data from the DB. We rename questionid, userid, and username to: 1. easy to read and consistent to JS naming (snake_case or camelCase) and 2. since we join two tables and both have id or username column renaming will avoid duplicates
+    
       `SELECT 
           questions.questionid AS question_id, 
           questions.title, 
