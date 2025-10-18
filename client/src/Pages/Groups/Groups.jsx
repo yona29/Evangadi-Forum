@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../../Api/axios"; // your axios instance
-import classes from "./Groups.module.css";
+import classes from "./Groups.module.css"; 
+import SuccessMsgModal from "../../Components/SuccessMsgModal/SuccessMsgModal"
 
 const Groups = () => {
   const [groups, setGroups] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -43,11 +45,22 @@ const Groups = () => {
             : g
         )
       );
+
+      //The success msg modal 
+      if(data.status === "joined"){
+        setSuccessMessage("You've joined the group successfully 🎉!");
+      } else{
+        setSuccessMessage("You've left the group 😔")
+      }
     } catch (err) {
       console.error(err);
       alert("Failed to join/leave the group.");
     }
   };
+
+
+
+
 
   return (
     <section className={classes.communityGroupsPage}>
@@ -69,6 +82,13 @@ const Groups = () => {
           <p>No groups found.</p>
         )}
       </div>
+      {/*success message */}
+      {successMessage && (
+        <SuccessMsgModal
+          message={successMessage}
+          onClose={() => setSuccessMessage("")}
+        />
+      )}
     </section>
   );
 };
