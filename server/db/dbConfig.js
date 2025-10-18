@@ -1,26 +1,43 @@
-const mysql2 = require("mysql2");
-const dotenv = require("dotenv");
-dotenv.config();
-const dbconnection = mysql2.createPool({
+const fs = require("fs");
+const path = require("path");
+const mysql = require("mysql2/promise"); // Promise-based mysql2
+
+// Ensure required environment variables exist
+const requiredEnv = ["DB_HOST", "DB_USER", "DB_PASS", "DB_NAME", "DB_PORT"];
+const missingEnv = requiredEnv.filter((key) => !process.env[key]);
+if (missingEnv.length > 0) {
+  console.error(
+    `❌ Missing environment variables: ${missingEnv.join(
+      ", "
+    )}. Please check your .env file.`
+  );
+  process.exit(1);
+}
+
+// SSL options for Aiven
+const caPath = path.join(__dirname, "../config/ca.pem");
+if (!fs.existsSync(caPath)) {
+  console.error("❌ CA certificate not found at config/ca.pem");
+  process.exit(1);
+}
+const sslOptions = {
+  ca: fs.readFileSync(caPath),
+  rejectUnauthorized: true,
+};
+
+// Create a promise-based connection pool
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+  ssl: sslOptions,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0,
+  connectTimeout: 10000, // 10 seconds
 });
 
-// Test connection
-(async () => {
-  try {
-    const connection = await dbconnection.promise().getConnection();
-    console.log("✅ Connected to database successfully!");
-    connection.release();
-  } catch (err) {
-    console.error("❌ Database connection failed:", err.message);
-  }
-})();
+console.log("✅ MySQL promise-based pool created");
 
-
-module.exports = dbconnection.promise();
+module.exports = pool;
