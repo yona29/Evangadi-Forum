@@ -1,6 +1,6 @@
 const dbConnection = require("../db/dbConfig");
 const { StatusCodes } = require("http-status-codes");
-const { v4: uuidv4 } = require("uuid");
+const { v4: uuidv4 } = require("uuid"); //generate universally unique identifiers (UUIDs)
 
 // ---------------------- CREATE A NEW QUESTION ----------------------
 async function question(req, res) {
@@ -61,10 +61,12 @@ async function question(req, res) {
 }
 
 // ---------------------- GET ALL QUESTIONS ----------------------
-async function Allquestion(req, res) {
+
+async function Allquestion(req, res) { 
   try {
     // Join questions with users to include author's username
     const [results] = await dbConnection.query(
+    
       `SELECT 
           questions.questionid AS question_id, 
           questions.title, 
@@ -75,20 +77,21 @@ async function Allquestion(req, res) {
        ORDER BY questions.id DESC`
     );
 
-    return res.status(StatusCodes.OK).json({ questions: results });
+    return res.status(StatusCodes.OK).json({ questions: results }); //sends back a JSON response containing all questions 
   } catch (error) {
     console.error("Error retrieving questions:", error.message);
     return res
-      .status(StatusCodes.NOT_FOUND)
+      .status(StatusCodes.NOT_FOUND)        //if not, it will log the error and responds NOT FOUND
       .json({ msg: "No questions found" });
   }
 }
 
 // ---------------------- GET SINGLE QUESTION ----------------------
 async function getSingleQuestion(req, res) {
-  const { question_id } = req.params;
+  const { question_id } = req.params; ///question/:question_id
 
   if (!question_id) {
+    //checks if the question_id is missing if it does returns bad request
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json({ msg: "Please provide a question ID." });
@@ -97,17 +100,18 @@ async function getSingleQuestion(req, res) {
   try {
     // Query database for the specific question
     const [question] = await dbConnection.query(
-      "SELECT questionid, title, description, created_at, userid FROM questions WHERE questionid = ?",
+      "SELECT questionid, title, description, created_at, userid FROM questions WHERE questionid = ?", // is the placeholder to prevent SQL Injections
       [question_id]
     );
 
     if (question.length === 0) {
+      //if the query returns an empty array
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ msg: "No question found with this ID." });
     }
 
-    return res.status(StatusCodes.OK).json({ question: question[0] });
+    return res.status(StatusCodes.OK).json({ question: question[0] }); //
   } catch (error) {
     console.error("Error retrieving question:", error.message);
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
