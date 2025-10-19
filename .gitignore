@@ -5,3 +5,6 @@ client/src/Api/axios.js
 server/.env
 client/src/Api/axios.js
 server/.env
+server/config/ca.pem
+client/src/Api/axios.js
+client/src/Api/axios.js
