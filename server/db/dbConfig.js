@@ -32,7 +32,9 @@ const pool = mysql.createPool({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-  ssl: sslOptions,
+  ssl: {
+    rejectUnauthorized: false, // ✅ Accept self-signed certificates
+  },
   waitForConnections: true,
   connectionLimit: 10,
   connectTimeout: 10000, // 10 seconds
