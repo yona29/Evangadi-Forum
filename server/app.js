@@ -32,7 +32,7 @@ app.get("/", (req, res) => res.send("Hello from Evangadi Forum!"));
 // Public routes (no auth)
 app.use("/", installRoutes);
 app.use("/api/user", userRoutes); // Register/Login
-app.use("/api", authRoutes); // Forgot/Reset Password
+app.use("/api/user", authRoutes); // Forgot/Reset Password
 
 // Protected routes (authMiddleware)
 app.use("/api", authMiddleware, questionRoutes);
