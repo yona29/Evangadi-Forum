@@ -3,90 +3,81 @@ const bcrypt = require("bcrypt");
 const db = require("../db/dbConfig");
 const sendEmail = require("../utils/sendEmail");
 
-// FRONTEND URL from env
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 
-// --- Forgot Password ---
+// -------------------
+// Forgot Password
+// -------------------
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
 
   try {
-    // 1️⃣ Validate user exists
+    // 1️⃣ Check if user exists
     const [users] = await db.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
-    if (users.length === 0) {
-      // Generic message to prevent enumeration
-      return res
-        .status(200)
-        .json({ message: "If that email exists, a reset link has been sent." });
-    }
+    if (!users.length)
+      return res.status(404).json({ message: "User not found" });
 
-    const user = users[0];
-
-    // 2️⃣ Generate token & hash it
+    // 2️⃣ Generate token & expiry
     const token = crypto.randomBytes(32).toString("hex");
-    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
     const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    // 3️⃣ Save hashed token
+    // 3️⃣ Save token & expiry in DB
     await db.query(
-      "UPDATE users SET reset_token = ?, reset_expires = ? WHERE userid = ?",
-      [tokenHash, expires, user.userid]
+      "UPDATE users SET reset_token = ?, reset_expires = ? WHERE email = ?",
+      [token, expires, email]
     );
 
     // 4️⃣ Build reset link
     const resetLink = `${FRONTEND_URL}/reset-password/${token}`;
 
-    // 5️⃣ Email HTML
-    const htmlContent = `
+    // 5️⃣ Send email
+    const html = `
       <div style="font-family:Arial,sans-serif;">
         <h3>Password Reset Request</h3>
-        <p>Click below to reset your password:</p>
-        <a href="${resetLink}" style="background:#4CAF50;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">Reset Password</a>
-        <p>This link expires in 1 hour.</p>
+        <p>Click below to reset your password (expires in 1 hour):</p>
+        <a href="${resetLink}" 
+           style="background:#4CAF50;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">
+           Reset Password
+        </a>
       </div>
     `;
+    await sendEmail(email, "Reset Your Password", html);
 
-    // 6️⃣ Send email (async)
-    await sendEmail(email, "Reset Your Password", htmlContent);
-
-    res
-      .status(200)
-      .json({ message: "If that email exists, a reset link has been sent." });
+    res.json({ message: "Password reset link sent to your email." });
   } catch (err) {
     console.error("Forgot Password Error:", err);
     res.status(500).json({ message: "Error sending reset email." });
   }
 };
 
-// --- Reset Password ---
+// -------------------
+// Reset Password
+// -------------------
 exports.resetPassword = async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
 
   try {
-    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
-
-    // 1️⃣ Verify token & expiry
+    // 1️⃣ Verify token
     const [users] = await db.query(
       "SELECT * FROM users WHERE reset_token = ? AND reset_expires > NOW()",
-      [tokenHash]
+      [token]
     );
-
-    if (users.length === 0)
+    if (!users.length)
       return res.status(400).json({ message: "Invalid or expired token" });
 
     // 2️⃣ Hash new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashed = await bcrypt.hash(newPassword, 10);
 
-    // 3️⃣ Update password and clear reset token
+    // 3️⃣ Update password & clear reset fields
     await db.query(
       "UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE userid = ?",
-      [hashedPassword, users[0].userid]
+      [hashed, users[0].userid]
     );
 
-    res.json({ message: "Password has been reset successfully." });
+    res.json({ message: "Password reset successfully." });
   } catch (err) {
     console.error("Reset Password Error:", err);
     res.status(500).json({ message: "Error resetting password." });

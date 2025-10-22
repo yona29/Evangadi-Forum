@@ -1,17 +1,15 @@
-// app.js
-
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 require("dotenv").config();
 
-const answerRoutes = require("./routes/answerRoute");
-const questionRoutes = require("./routes/questionRoute");
-const userRoutes = require("./routes/userRoute");
-const aiRoute = require("./routes/aiRoute");
 const authRoutes = require("./routes/authRoute");
-const installRoutes = require("./routes/installRoute");
+const userRoutes = require("./routes/userRoute");
+const questionRoutes = require("./routes/questionRoute");
+const answerRoutes = require("./routes/answerRoute");
+const aiRoute = require("./routes/aiRoute");
 const groupRoutes = require("./routes/groupRoute");
+const installRoutes = require("./routes/installRoute");
 const authMiddleware = require("./middleware/authMiddleware");
 const db = require("./db/dbConfig");
 
@@ -21,13 +19,11 @@ const port = process.env.PORT || 14255;
 // -------------------------------
 // Middleware
 // -------------------------------
-app.use(helmet());
+app.use(helmet()); // Security headers
 app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173" }));
 app.use(express.json());
 
-// -------------------------------
-// Optional: HTTP logger in dev
-// -------------------------------
+// Optional HTTP logger for dev
 if (process.env.NODE_ENV !== "production") {
   app.use(require("morgan")("dev"));
 }
@@ -40,17 +36,19 @@ app.get("/", (req, res) => res.send("Hello from Evangadi Forum!"));
 // -------------------------------
 // API routes
 // -------------------------------
+
+// Public routes (no auth)
 app.use("/", installRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api", authRoutes);
+app.use("/api/user", userRoutes); // Register/Login
+app.use("/api", authRoutes); // Forgot/Reset Password
+
+// Protected routes (authMiddleware)
 app.use("/api", authMiddleware, questionRoutes);
 app.use("/api", authMiddleware, answerRoutes);
 app.use("/api/ai", authMiddleware, aiRoute);
 app.use("/api/groups", authMiddleware, groupRoutes);
 
-// -------------------------------
-// Health endpoint
-// -------------------------------
+// Health check
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
 // -------------------------------
@@ -70,21 +68,17 @@ app.use((err, req, res, next) => {
 // -------------------------------
 async function startServer() {
   try {
-    // Test a simple query to confirm DB connection
-    await db.query("SELECT 1");
+    await db.query("SELECT 1"); // Test DB connection
     console.log("✅ MySQL promise-based pool created");
 
-    // Start server and bind to all interfaces for Render
+    // Bind to all interfaces for Render deployment
     app.listen(port, "0.0.0.0", () => {
       console.log(`🚀 Server running on port ${port}`);
     });
   } catch (err) {
     console.error("❌ Database connection failed:", err.message);
-    process.exit(1); // Exit if DB fails
+    process.exit(1);
   }
 }
 
-// -------------------------------
-// Start the app
-// -------------------------------
 startServer();

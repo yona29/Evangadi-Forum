@@ -1,17 +1,18 @@
 const express = require("express");
-const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const rateLimit = require("express-rate-limit");
 const authController = require("../controller/authController");
 
-// Rate limiter for forgot password
+const router = express.Router();
+
+// Rate limiter for forgot-password (max 5 requests per hour)
 const forgotLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
+  windowMs: 60 * 60 * 1000,
   max: 5,
-  message: "Too many requests, please try again later.",
+  message: "Too many requests, try again later",
 });
 
-// Validation middleware
+// Email validation middleware
 const validateEmail = [
   body("email").isEmail().normalizeEmail(),
   (req, res, next) => {
@@ -22,6 +23,7 @@ const validateEmail = [
   },
 ];
 
+// Password validation middleware
 const validatePassword = [
   body("newPassword").isLength({ min: 6 }),
   (req, res, next) => {
@@ -32,7 +34,9 @@ const validatePassword = [
   },
 ];
 
-// Routes
+// -------------------
+// Public Routes
+// -------------------
 router.post(
   "/forgot-password",
   forgotLimiter,
