@@ -14,16 +14,8 @@ if (missingEnv.length > 0) {
   process.exit(1);
 }
 
-// SSL options for Aiven
-const caPath = path.join(__dirname, "../config/ca.pem");
-if (!fs.existsSync(caPath)) {
-  console.error("❌ CA certificate not found at config/ca.pem");
-  process.exit(1);
-}
-const sslOptions = {
-  ca: fs.readFileSync(caPath),
-  rejectUnauthorized: true,
-};
+// SSL options for Aiven (simplified)
+// Note: Using rejectUnauthorized: false for development/production compatibility
 
 // Create a promise-based connection pool
 const pool = mysql.createPool({
