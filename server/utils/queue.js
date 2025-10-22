@@ -1,6 +1,6 @@
 // queue.js
 const Queue = require("bull");
-const sendEmail = require("./utils/sendEmail");
+const sendEmail = require("./sendEmail");
 
 const emailQueue = new Queue("emails", {
   redis: { host: process.env.REDIS_HOST || "127.0.0.1", port: 6379 },
