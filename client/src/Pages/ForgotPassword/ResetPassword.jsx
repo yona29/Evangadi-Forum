@@ -13,12 +13,17 @@ const ResetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setMessage(""); // Clear previous messages
     try {
-      const res = await axios.post(`/reset-password/${token}`, { newPassword });
+      const res = await axios.post(`/api/user/reset-password/${token}`, { newPassword });
       setMessage(res.data.message);
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      setMessage(err.response?.data?.message || "Error resetting password.");
+      console.error("Reset password error:", err);
+      const errorMessage = err.response?.data?.message || 
+                          err.message || 
+                          "Error resetting password. Please try again.";
+      setMessage(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -40,7 +45,13 @@ const ResetPassword = () => {
             {loading ? "Resetting..." : "Reset Password"}
           </button>
         </form>
-        {message && <p className={classes["auth-message"]}>{message}</p>}
+        {message && (
+          <p className={`${classes["auth-message"]} ${
+            message.includes("successfully") ? classes["success"] : classes["error"]
+          }`}>
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );

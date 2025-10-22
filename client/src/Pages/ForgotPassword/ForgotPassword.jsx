@@ -10,11 +10,16 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setMessage(""); // Clear previous messages
     try {
-      const res = await axios.post("/forgot-password", { email });
+      const res = await axios.post("/api/user/forgot-password", { email });
       setMessage(res.data.message);
     } catch (err) {
-      setMessage(err.response?.data?.message || "Error sending reset link.");
+      console.error("Forgot password error:", err);
+      const errorMessage = err.response?.data?.message || 
+                          err.message || 
+                          "Error sending reset link. Please try again.";
+      setMessage(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -36,7 +41,13 @@ const ForgotPassword = () => {
             {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
-        {message && <p className={classes["auth-message"]}>{message}</p>}
+        {message && (
+          <p className={`${classes["auth-message"]} ${
+            message.includes("successfully") ? classes["success"] : classes["error"]
+          }`}>
+            {message}
+          </p>
+        )}
       </div>
     </div>
   );

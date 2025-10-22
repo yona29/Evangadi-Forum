@@ -15,13 +15,18 @@ function hashToken(token) {
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
 
+  // Validate email input
+  if (!email || !email.includes("@")) {
+    return res.status(400).json({ message: "Please provide a valid email address" });
+  }
+
   try {
     // 1️⃣ Check if user exists
     const [users] = await db.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
     if (users.length === 0)
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "No account found with this email address" });
 
     // 2️⃣ Generate reset token (raw + hashed)
     const rawToken = crypto.randomBytes(32).toString("hex");
@@ -72,6 +77,15 @@ exports.forgotPassword = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
+
+  // Validate inputs
+  if (!token) {
+    return res.status(400).json({ message: "Reset token is required" });
+  }
+  
+  if (!newPassword || newPassword.length < 6) {
+    return res.status(400).json({ message: "Password must be at least 6 characters long" });
+  }
 
   try {
     // 1️⃣ Hash token from URL to compare
