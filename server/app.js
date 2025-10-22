@@ -44,7 +44,7 @@ app.get("/", (req, res) => {
 // -------------------------------
 app.use("/", installRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/auth", authRoutes);
+app.use("/api", authRoutes);
 app.use("/api", authMiddleware, questionRoutes);
 app.use("/api", authMiddleware, answerRoutes);
 app.use("/api/ai", authMiddleware, aiRoute);
