@@ -28,7 +28,7 @@ export default function ForgotPassword() {
     setLoading(true);
     try {
       // NOTE: your axios base likely contains "/api" already.
-      const res = await axios.post("/auth/forgot-password", { email });
+      const res = await axios.post("/forgot-password", { email });
       // backend returns a generic success message even if email not found
       setMessage(
         res.data.message || "If that email exists, a reset link was sent."
