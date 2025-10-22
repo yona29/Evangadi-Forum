@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
 const authRoutes = require("./routes/authRoute");
@@ -18,8 +20,17 @@ const port = process.env.PORT || 14255;
 // -------------------------------
 // Middleware
 // -------------------------------
+app.use(helmet()); // Security headers
 app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" }));
-app.use(express.json());
+app.use(express.json({ limit: "10mb" })); // Limit request size
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later."
+});
+app.use(limiter);
 // -------------------------------
 // Test route
 // -------------------------------
@@ -35,8 +46,8 @@ app.use("/api/user", userRoutes); // Register/Login
 app.use("/api/user", authRoutes); // Forgot/Reset Password
 
 // Protected routes (authMiddleware)
-app.use("/api", authMiddleware, questionRoutes);
-app.use("/api", authMiddleware, answerRoutes);
+app.use("/api/question", authMiddleware, questionRoutes);
+app.use("/api/answer", authMiddleware, answerRoutes);
 app.use("/api/ai", authMiddleware, aiRoute);
 app.use("/api/groups", authMiddleware, groupRoutes);
 
