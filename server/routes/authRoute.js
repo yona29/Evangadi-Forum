@@ -5,7 +5,12 @@ const {
   resetPassword,
 } = require("../controller/authController");
 
-router.post("/auth/forgot-password", forgotPassword);
-router.post("/auth/reset-password/:token", resetPassword);
+// Debug route to verify auth routes are accessible
+router.get("/test", (req, res) => {
+  res.json({ message: "Auth routes are working!", timestamp: new Date().toISOString() });
+});
+
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
 
 module.exports = router;
