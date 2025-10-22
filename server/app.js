@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const helmet = require("helmet");
 require("dotenv").config();
 
 const authRoutes = require("./routes/authRoute");
@@ -19,15 +18,8 @@ const port = process.env.PORT || 14255;
 // -------------------------------
 // Middleware
 // -------------------------------
-app.use(helmet()); // Security headers
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:5173" }));
+app.use(cors({ origin: process.env.CLIENT_URL || "http://localhost:5173" }));
 app.use(express.json());
-
-// Optional HTTP logger for dev
-if (process.env.NODE_ENV !== "production") {
-  app.use(require("morgan")("dev"));
-}
-
 // -------------------------------
 // Test route
 // -------------------------------
@@ -48,24 +40,10 @@ app.use("/api", authMiddleware, answerRoutes);
 app.use("/api/ai", authMiddleware, aiRoute);
 app.use("/api/groups", authMiddleware, groupRoutes);
 
-// Health check
-app.get("/health", (req, res) => res.json({ status: "ok" }));
-
-// -------------------------------
-// 404 & Global Error Handler
-// -------------------------------
-app.use((req, res, next) =>
-  res.status(404).json({ message: "Route not found" })
-);
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Internal server error" });
-});
-
 // -------------------------------
 // Database connection & server start
 // -------------------------------
+
 async function startServer() {
   try {
     await db.query("SELECT 1"); // Test DB connection
