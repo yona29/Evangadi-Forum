@@ -4,10 +4,7 @@ const db = require("../db/dbConfig");
 const sendEmail = require("../utils/sendEmail");
 
 // Use environment variable for frontend URL
-const FRONTEND_URL =
-  process.env.NODE_ENV === "production"
-    ? process.env.FRONTEND_URL || "https://yourdomain.com"
-    : "http://localhost:5173";
+const FRONTEND_URL = "http://localhost:5173";
 
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
