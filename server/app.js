@@ -1,3 +1,5 @@
+// app.js
+
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -65,4 +67,24 @@ app.use((err, req, res, next) => {
 
 // -------------------------------
 // Database connection & server start
-// --------
+// -------------------------------
+async function startServer() {
+  try {
+    // Test a simple query to confirm DB connection
+    await db.query("SELECT 1");
+    console.log("✅ MySQL promise-based pool created");
+
+    // Start server and bind to all interfaces for Render
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`🚀 Server running on port ${port}`);
+    });
+  } catch (err) {
+    console.error("❌ Database connection failed:", err.message);
+    process.exit(1); // Exit if DB fails
+  }
+}
+
+// -------------------------------
+// Start the app
+// -------------------------------
+startServer();
