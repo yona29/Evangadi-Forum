@@ -13,10 +13,12 @@ function hashToken(token) {
  * Step 1: User submits their email to request a password reset
  */
 exports.forgotPassword = async (req, res) => {
+  console.log("🔍 Forgot password endpoint hit:", req.body);
   const { email } = req.body;
 
   // Validate email input
   if (!email || !email.includes("@")) {
+    console.log("❌ Invalid email provided:", email);
     return res.status(400).json({ message: "Please provide a valid email address" });
   }
 
