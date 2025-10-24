@@ -1,44 +1,29 @@
-const sendpulse = require("sendpulse-api");
-require("dotenv").config();
+const { MailerSend } = require("mailersend");
 
-const API_USER_ID = process.env.SENDPULSE_USER_ID;
-const API_SECRET = process.env.SENDPULSE_SECRET;
-const TOKEN_STORAGE = "/tmp/"; // Temporary folder for tokens
+const mailersend = new MailerSend({
+  apiKey: process.env.MAILERSEND_API_KEY,
+});
 
-// Initialize SendPulse SDK
-sendpulse.init(API_USER_ID, API_SECRET, TOKEN_STORAGE);
-
-/**
- * Send email via SendPulse API
- * @param {string} to - Recipient email
- * @param {string} subject - Email subject
- * @param {string} text - Plain text content
- * @param {string} html - HTML content
- */
 async function sendEmail(to, subject, text, html) {
-  return new Promise((resolve, reject) => {
-    const email = {
-      html,
-      text,
-      subject,
+  try {
+    const emailData = {
       from: {
-        name: process.env.SENDPULSE_FROM_NAME,
-        email: process.env.SENDPULSE_FROM_EMAIL,
+        email: process.env.MAILERSEND_FROM_EMAIL,
+        name: process.env.MAILERSEND_FROM_NAME,
       },
       to: [{ email: to }],
+      subject,
+      text,
+      html,
     };
 
-    sendpulse.smtpSendMail((data) => {
-      if (data.result) {
-        console.log("📧 Email sent successfully:", data);
-        resolve(data);
-      } else {
-        console.error("❌ SendPulse Error:", data);
-        reject(data);
-      }
-    }, email);
-  });
+    const response = await mailersend.email.send(emailData);
+    console.log("📧 Email sent:", response);
+    return response;
+  } catch (err) {
+    console.error("❌ Sending failed:", err.response?.body || err);
+    throw err;
+  }
 }
-
 
 module.exports = sendEmail;
