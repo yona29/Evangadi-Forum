@@ -23,13 +23,12 @@ const port = process.env.PORT || 14255;
 app.use(helmet()); // Security headers
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", // local dev frontend
-      process.env.CLIENT_URL, // production frontend
-    ],
-    credentials: true, // if using cookies or auth
+    origin: "https://evangadi-forum-sand.vercel.app", // <-- frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // if you use cookies
   })
-);app.use(express.json({ limit: "10mb" })); // Limit request size
+);
+app.use(express.json({ limit: "10mb" })); // Limit request size
 
 // Rate limiting
 const limiter = rateLimit({
