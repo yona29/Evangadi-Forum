@@ -1,10 +1,10 @@
 const express = require("express");
-const app = express();
-const port = 5500;
+const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+require("dotenv").config();
 
-<<<<<<< Updated upstream
 const dbConnection = require("./db/dbConfig.js");
-=======
 // -------------------------------
 // Middleware
 // -------------------------------
@@ -17,23 +17,52 @@ app.use(
   })
 );
 app.use(express.json({ limit: "10mb" })); // Limit request size
->>>>>>> Stashed changes
+    
 
-app.get("/", (req, res) => {
-  res.send("Hello from Evangadi Forum!");
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later."
 });
+app.use(limiter);
+// -------------------------------
+// Test route
+// -------------------------------
+app.get("/", (req, res) => res.send("Hello from Evangadi Forum!"));
 
-// try conncet to database and if so app listen
-async function start() {
+// -------------------------------
+// API routes
+// -------------------------------
+
+// Public routes (no auth)
+app.use("/", installRoutes);
+app.use("/api/user", userRoutes); // Register/Login
+app.use("/api/user", authRoutes); // Forgot/Reset Password
+
+// Protected routes (authMiddleware)
+app.use("/api/question", authMiddleware, questionRoutes);
+app.use("/api/answer", authMiddleware, answerRoutes);
+app.use("/api/ai", authMiddleware, aiRoute);
+app.use("/api/groups", authMiddleware, groupRoutes);
+
+// -------------------------------
+// Database connection & server start
+// -------------------------------
+
+async function startServer() {
   try {
-    const result = await dbConnection.getConnection();
-    console.log("database connection was established !!");
-  } catch (error) {
-    console.log(error.message);
+    await db.query("SELECT 1"); // Test DB connection
+    console.log("✅ MySQL promise-based pool created");
+
+    // Bind to all interfaces for Render deployment
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`🚀 Server running on port ${port}`);
+    });
+  } catch (err) {
+    console.error("❌ Database connection failed:", err.message);
+    process.exit(1);
   }
 }
-start();
 
-app.listen(port, () =>
-  console.log(`🚀 Server running on http://localhost:${port}`)
-);
+startServer();
