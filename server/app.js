@@ -4,31 +4,20 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
-const authRoutes = require("./routes/authRoute");
-const userRoutes = require("./routes/userRoute");
-const questionRoutes = require("./routes/questionRoute");
-const answerRoutes = require("./routes/answerRoute");
-const aiRoute = require("./routes/aiRoute");
-const groupRoutes = require("./routes/groupRoute");
-const installRoutes = require("./routes/installRoute");
-const authMiddleware = require("./middleware/authMiddleware");
-const db = require("./db/dbConfig");
-
-const app = express();
-const port = process.env.PORT || 14255;
-
+const dbConnection = require("./db/dbConfig.js");
 // -------------------------------
 // Middleware
 // -------------------------------
 app.use(helmet()); // Security headers
 app.use(
   cors({
-    origin: process.env.CLIENT_URL, // <-- frontend URL
+    origin: process.env.CLIENT_URL, 
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // if you use cookies
+    credentials: true, 
   })
 );
 app.use(express.json({ limit: "10mb" })); // Limit request size
+    
 
 // Rate limiting
 const limiter = rateLimit({
