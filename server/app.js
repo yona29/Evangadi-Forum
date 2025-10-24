@@ -23,7 +23,7 @@ const port = process.env.PORT || 14255;
 app.use(helmet()); // Security headers
 app.use(
   cors({
-    origin: "https://evangadi-forum-sand.vercel.app", // <-- frontend URL
+    origin: process.env.CLIENT_URL, // <-- frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // if you use cookies
   })
