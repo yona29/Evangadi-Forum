@@ -19,5 +19,8 @@ server/.env
 server/.env
 server/.env
 server/.env
+<<<<<<< Updated upstream
 client/.env
 server/.env
+=======
+>>>>>>> Stashed changes
