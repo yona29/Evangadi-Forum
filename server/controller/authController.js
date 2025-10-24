@@ -16,10 +16,10 @@ exports.forgotPassword = async (req, res) => {
   console.log("🔍 Forgot password endpoint hit:", req.body);
   const { email } = req.body;
 
-  // Validate email input
   if (!email || !email.includes("@")) {
-    console.log("❌ Invalid email provided:", email);
-    return res.status(400).json({ message: "Please provide a valid email address" });
+    return res
+      .status(400)
+      .json({ message: "Please provide a valid email address" });
   }
 
   try {
@@ -28,25 +28,25 @@ exports.forgotPassword = async (req, res) => {
       email,
     ]);
     if (users.length === 0)
-      return res.status(404).json({ message: "No account found with this email address" });
+      return res.status(404).json({ message: "No account found" });
 
-    // 2️⃣ Generate reset token (raw + hashed)
+    // 2️⃣ Generate reset token
     const rawToken = crypto.randomBytes(32).toString("hex");
     const hashedToken = hashToken(rawToken);
 
-    // 3️⃣ Set expiry time (10 minutes from now)
+    // 3️⃣ Expiry 10 min
     const expires = new Date(Date.now() + 10 * 60 * 1000)
       .toISOString()
       .slice(0, 19)
       .replace("T", " ");
 
-    // 4️⃣ Store hashed token & expiry in DB
+    // 4️⃣ Store hashed token & expiry
     await db.query(
       "UPDATE users SET reset_token=?, reset_expires=? WHERE email=?",
       [hashedToken, expires, email]
     );
 
-    // 5️⃣ Create password reset link (send raw token in link)
+    // 5️⃣ Build reset link
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${rawToken}`;
 
     // 6️⃣ Email content
@@ -58,20 +58,28 @@ exports.forgotPassword = async (req, res) => {
     `;
 
     // 7️⃣ Send email
-    await sendEmail(
-      email,
-      "Password Reset Request",
-      `Reset your password using this link: ${resetUrl}`,
-      html
-    );
+    try {
+      await sendEmail(
+        email,
+        "Password Reset Request",
+        `Reset link: ${resetUrl}`,
+        html
+      );
+    } catch (err) {
+      console.error("🚨 Send email failed:", err);
+      return res
+        .status(500)
+        .json({ message: "Failed to send email", error: err.message });
+    }
 
     res.json({ message: "Password reset email sent successfully!" });
   } catch (error) {
     console.error("Forgot Password Error:", error);
-    res.status(500).json({ message: "Error sending reset email" });
+    res
+      .status(500)
+      .json({ message: "Error sending reset email", error: error.message });
   }
 };
-
 /**
  * ✅ POST /api/user/reset-password/:token
  * Step 2: User submits new password with reset token
@@ -84,9 +92,11 @@ exports.resetPassword = async (req, res) => {
   if (!token) {
     return res.status(400).json({ message: "Reset token is required" });
   }
-  
+
   if (!newPassword || newPassword.length < 8) {
-    return res.status(400).json({ message: "Password must be at least 8 characters long" });
+    return res
+      .status(400)
+      .json({ message: "Password must be at least 8 characters long" });
   }
 
   try {

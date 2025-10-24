@@ -3,10 +3,18 @@ require("dotenv").config();
 
 const API_USER_ID = process.env.SENDPULSE_USER_ID;
 const API_SECRET = process.env.SENDPULSE_SECRET;
-const TOKEN_STORAGE = "/tmp/";
+const TOKEN_STORAGE = "/tmp/"; // Temporary folder for tokens
 
+// Initialize SendPulse SDK
 sendpulse.init(API_USER_ID, API_SECRET, TOKEN_STORAGE);
 
+/**
+ * Send email via SendPulse API
+ * @param {string} to - Recipient email
+ * @param {string} subject - Email subject
+ * @param {string} text - Plain text content
+ * @param {string} html - HTML content
+ */
 async function sendEmail(to, subject, text, html) {
   return new Promise((resolve, reject) => {
     const email = {
@@ -31,5 +39,6 @@ async function sendEmail(to, subject, text, html) {
     }, email);
   });
 }
+
 
 module.exports = sendEmail;
