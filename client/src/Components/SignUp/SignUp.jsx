@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Classes from "./SignUp.module.css";
 import { BiHide, BiShow } from "react-icons/bi";
 import axios from "../../Api/axios";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 
 const SignUp = ({ visible }) => {
