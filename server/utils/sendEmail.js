@@ -1,27 +1,31 @@
-const { MailerSend } = require("mailersend");
+const nodemailer = require("nodemailer");
 
-const mailersend = new MailerSend({
-  apiKey: process.env.MAILERSEND_API_KEY,
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 465, // use SSL port instead
+  secure: true,
+  auth: {
+    user: process.env.BREVO_SMTP_LOGIN,
+    pass: process.env.BREVO_SMTP_KEY,
+  },
 });
+
 
 async function sendEmail(to, subject, text, html) {
   try {
-    const emailData = {
-      from: {
-        email: process.env.MAILERSEND_FROM_EMAIL,
-        name: process.env.MAILERSEND_FROM_NAME,
-      },
-      to: [{ email: to }],
+    const mailOptions = {
+      from: `"${process.env.BREVO_SENDER_NAME}" <${process.env.BREVO_SENDER_EMAIL}>`,
+      to,
       subject,
       text,
       html,
     };
 
-    const response = await mailersend.email.send(emailData);
-    console.log("📧 Email sent:", response);
-    return response;
+    const info = await transporter.sendMail(mailOptions);
+    console.log("📨 Email sent:", info.messageId);
+    return info;
   } catch (err) {
-    console.error("❌ Sending email failed:", err.response?.body || err);
+    console.error("❌ Email sending failed:", err);
     throw err;
   }
 }

@@ -66,7 +66,6 @@ async function startServer() {
   try {
     await db.query("SELECT 1"); // Test DB connection
     console.log("✅ MySQL promise-based pool created");
-
     // Bind to all interfaces for Render deployment
     app.listen(port, "0.0.0.0", () => {
       console.log(`🚀 Server running on port ${port}`);

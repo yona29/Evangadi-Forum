@@ -20,30 +20,34 @@ exports.forgotPassword = async (req, res) => {
     if (users.length === 0)
       return res.status(404).json({ message: "No account found" });
 
+    // Generate and hash token
     const rawToken = crypto.randomBytes(32).toString("hex");
     const hashedToken = hashToken(rawToken);
-    const expires = new Date(Date.now() + 10 * 60 * 1000)
+    const expires = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
       .toISOString()
       .slice(0, 19)
       .replace("T", " ");
 
+    // Save token and expiry
     await db.query(
       "UPDATE users SET reset_token=?, reset_expires=? WHERE email=?",
       [hashedToken, expires, email]
     );
 
+    // Create reset URL
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${rawToken}`;
     const html = `
       <h2>Password Reset Request</h2>
-      <p>Click below to reset your password:</p>
+      <p>Click the link below to reset your password:</p>
       <a href="${resetUrl}" target="_blank">${resetUrl}</a>
       <p>This link expires in 10 minutes.</p>
     `;
 
+    // Send email via Brevo
     await sendEmail(
       email,
       "Password Reset Request",
-      `Reset link: ${resetUrl}`,
+      `Reset your password here: ${resetUrl}`,
       html
     );
 
@@ -53,6 +57,7 @@ exports.forgotPassword = async (req, res) => {
     res.status(500).json({ message: "Failed to send reset email" });
   }
 };
+
 exports.resetPassword = async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
