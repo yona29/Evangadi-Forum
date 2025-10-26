@@ -3,85 +3,84 @@ const bcrypt = require("bcrypt");
 const db = require("../db/dbConfig");
 const sendEmail = require("../utils/sendEmail");
 
-// Use environment variable for frontend URL
-const FRONTEND_URL =
-  process.env.NODE_ENV === "production"
-    ? process.env.FRONTEND_URL || "https://yourdomain.com"
-    : "http://localhost:5173";
+// Helper to hash token
+function hashToken(token) {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
 
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
+  if (!email || !email.includes("@"))
+    return res.status(400).json({ message: "Invalid email" });
 
   try {
-    // 1️⃣ Check if user exists
     const [users] = await db.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
     if (users.length === 0)
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "No account found" });
 
-    // 2️⃣ Generate reset token and expiration
-    const token = crypto.randomBytes(32).toString("hex");
-    const expires = new Date(Date.now() + 24 * 3600000); // 24 hours
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = hashToken(rawToken);
+    const expires = new Date(Date.now() + 10 * 60 * 1000)
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
 
-    // 3️⃣ Save token and expiry to DB
     await db.query(
-      "UPDATE users SET reset_token = ?, reset_expires = ? WHERE email = ?",
-      [token, expires, email]
+      "UPDATE users SET reset_token=?, reset_expires=? WHERE email=?",
+      [hashedToken, expires, email]
     );
 
-    // 4️⃣ Build password reset link dynamically (works in prod & dev)
-    const resetLink = `${FRONTEND_URL}/reset-password/${token}`;
-
-    // 5️⃣ Email HTML content
-    const htmlContent = `
-      <div style="font-family:Arial,sans-serif;">
-        <h3>Password Reset Request</h3>
-        <p>Click the button below to reset your password:</p>
-        <a href="${resetLink}" 
-           style="background:#4CAF50;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;">
-           Reset Password
-        </a>
-        <p>This link will expire in 1 hour.</p>
-      </div>
+    const resetUrl = `${process.env.CLIENT_URL}/reset-password/${rawToken}`;
+    const html = `
+      <h2>Password Reset Request</h2>
+      <p>Click below to reset your password:</p>
+      <a href="${resetUrl}" target="_blank">${resetUrl}</a>
+      <p>This link expires in 10 minutes.</p>
     `;
 
-    // 6️⃣ Send email
-    await sendEmail(email, "Reset Your Password", htmlContent);
+    await sendEmail(
+      email,
+      "Password Reset Request",
+      `Reset link: ${resetUrl}`,
+      html
+    );
 
-    res.json({ message: "Password reset link sent to your email." });
+    res.json({ message: "Password reset email sent successfully!" });
   } catch (err) {
     console.error("Forgot Password Error:", err);
-    res.status(500).json({ message: "Error sending reset email." });
+    res.status(500).json({ message: "Failed to send reset email" });
   }
 };
-
 exports.resetPassword = async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
 
+  if (!token || !newPassword || newPassword.length < 8)
+    return res.status(400).json({ message: "Invalid request" });
+
   try {
-    // 1️⃣ Verify valid token & expiration
+    const hashedToken = hashToken(token);
     const [users] = await db.query(
       "SELECT * FROM users WHERE reset_token = ? AND reset_expires > NOW()",
-      [token]
+      [hashedToken]
     );
 
     if (users.length === 0)
       return res.status(400).json({ message: "Invalid or expired token" });
 
-    // 2️⃣ Hash new password
+    const user = users[0];
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // 3️⃣ Update user password and clear reset fields
     await db.query(
       "UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE userid = ?",
-      [hashedPassword, users[0].userid]
+      [hashedPassword, user.userid]
     );
 
-    res.json({ message: "Password has been reset successfully." });
+    res.json({ message: "Password has been reset successfully!" });
   } catch (err) {
     console.error("Reset Password Error:", err);
-    res.status(500).json({ message: "Error resetting password." });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };

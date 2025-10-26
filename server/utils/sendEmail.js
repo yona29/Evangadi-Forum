@@ -1,22 +1,29 @@
-const nodemailer = require("nodemailer");
+const { MailerSend } = require("mailersend");
 
-const sendEmail = async (to, subject, htmlContent) => {
-  const transporter = nodemailer.createTransport({
-    service: "gmail", // or use "hotmail", "yahoo" etc.
-    auth: {
-      user: process.env.EMAIL_USER, // your email
-      pass: process.env.EMAIL_PASS, // your app password (not your normal password)
-    },
-  });
+const mailersend = new MailerSend({
+  apiKey: process.env.MAILERSEND_API_KEY,
+});
 
-  const mailOptions = {
-    from: `"Evangadi Forum" <${process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    html: htmlContent,
-  };
+async function sendEmail(to, subject, text, html) {
+  try {
+    const emailData = {
+      from: {
+        email: process.env.MAILERSEND_FROM_EMAIL,
+        name: process.env.MAILERSEND_FROM_NAME,
+      },
+      to: [{ email: to }],
+      subject,
+      text,
+      html,
+    };
 
-  await transporter.sendMail(mailOptions);
-};
+    const response = await mailersend.email.send(emailData);
+    console.log("📧 Email sent:", response);
+    return response;
+  } catch (err) {
+    console.error("❌ Sending email failed:", err.response?.body || err);
+    throw err;
+  }
+}
 
 module.exports = sendEmail;
